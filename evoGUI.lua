@@ -16,7 +16,10 @@ local function update_gui()
                 player.gui.top.evoGUI.add{type="label", name="run_time"}
             end
             player.gui.top.evoGUI.evolution_factor.caption = string.format("Biter evolution: %0.1f%%", game.evolution_factor * 100)
-            player.gui.top.evoGUI.run_time.caption = string.format("Play time: %d:%02d:%02d", run_time_hours, run_time_minutes, run_time_seconds)
+            player.gui.top.evoGUI.run_time.caption = string.format("Play time: %d:%02d:%02d",
+                                                                   run_time_hours,
+                                                                   run_time_minutes % 60,
+                                                                   run_time_seconds % 60)
         end
         evogui.previous = run_time_seconds
     end
