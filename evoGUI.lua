@@ -37,7 +37,7 @@ end
 evogui.create_or_update = create_or_update
 
 local function update_evolution(evoGUI)
-    evoGUI.evolution_factor.caption = string.format("Biter evolution: %0.1f%%", game.evolution_factor * 100)
+    evoGUI.evolution_factor.caption = {"biter-evolution", string.format("%0.1f%%", game.evolution_factor * 100)}
 end
 evogui.update_evolution = update_evolution
 
@@ -46,10 +46,10 @@ local function update_run_time(evoGUI)
     local run_time_minutes = math.floor(run_time_seconds/60)
     local run_time_hours = math.floor(run_time_minutes/60)
 
-    evoGUI.run_time.caption = string.format("Play time: %d:%02d:%02d",
-                                            run_time_hours,
-                                            run_time_minutes % 60,
-                                            run_time_seconds % 60)
+    evoGUI.run_time.caption = {"play-time", string.format("%d:%02d:%02d",
+                                                          run_time_hours,
+                                                          run_time_minutes % 60,
+                                                          run_time_seconds % 60)}
 end
 evogui.update_run_time = update_run_time
 
@@ -64,9 +64,7 @@ local function update_day_time(evoGUI)
 
     local brightness = math.floor((1 - game.darkness) * 100)
 
-    evoGUI.day_time.caption = string.format("The time is: %d:%02d. Brightness: %d%%",
-                                            day_time_hours,
-                                            rounded_minutes % 60,
-                                            brightness)
+    evoGUI.day_time.caption = {"", {"time-of-day", string.format("%d:%02d", day_time_hours, rounded_minutes % 60)}, " ",
+                                   {"brightness", string.format("%d%%", brightness)}}
 end
 evogui.update_day_time = update_day_time
