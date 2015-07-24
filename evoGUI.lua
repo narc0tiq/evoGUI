@@ -2,10 +2,9 @@ require "defines"
 
 if not evogui then evogui = {} end
 evogui.update_delay = 60 -- ticks to wait between each GUI update
-evogui.previous = nil -- game tick when we did our last GUI update
 
 local function update_gui()
-    if evogui.previous == nil or (game.tick - evogui.previous) >= evogui.update_delay then
+    if (game.tick % evogui.update_delay) == 0 then
         for i, player in ipairs(game.players) do
             evogui.create_or_update(player)
 
@@ -15,7 +14,6 @@ local function update_gui()
                 evogui.update_day_time(player.gui.top.evoGUI)
             end
         end
-        evogui.previous = game.tick
     end
 end
 evogui.update_gui = update_gui
