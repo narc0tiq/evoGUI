@@ -13,5 +13,7 @@ game.on_event(defines.events.on_tick, function(event)
 end)
 
 game.on_event(defines.events.on_gui_click, function(event)
-    log(string.format("Player %d (%s) pressed the %s thingy", event.player_index, game.get_player(event.player_index).name, event.element.name))
+    if evogui.on_click[event.element.name] ~= nil then
+        evogui.on_click[event.element.name](event)
+    end
 end)

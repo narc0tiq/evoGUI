@@ -1,6 +1,8 @@
 require "defines"
 
 if not evogui then evogui = {} end
+if not evogui.on_click then evogui.on_click = {} end
+
 evogui.update_delay = 60 -- ticks to wait between each GUI update
 
 local function update_gui()
@@ -8,9 +10,17 @@ local function update_gui()
         for i, player in ipairs(game.players) do
             evogui.create_or_update(player)
 
-            if player.gui.top.evoGUI then
+            if not player.gui.top.evoGUI then
+                return
+            end
+
+            if player.gui.top.evoGUI.evolution_factor then
                 evogui.update_evolution(player.gui.top.evoGUI.evolution_factor)
+            end
+            if player.gui.top.evoGUI.run_time then
                 evogui.update_run_time(player.gui.top.evoGUI.run_time)
+            end
+            if player.gui.top.evoGUI.first_line.day_time then
                 evogui.update_day_time(player.gui.top.evoGUI.first_line.day_time)
             end
         end
@@ -30,9 +40,7 @@ local function create_or_update(player)
 
     if not player.gui.top.evoGUI.first_line or
         not player.gui.top.evoGUI.first_line.evoGUI_size or
-        not player.gui.top.evoGUI.first_line.day_time or
-        not player.gui.top.evoGUI.evolution_factor or
-        not player.gui.top.evoGUI.run_time then
+        not player.gui.top.evoGUI.first_line.day_time then
         player.gui.top.evoGUI.destroy()
     end
 end
@@ -70,3 +78,24 @@ local function update_day_time(element)
                                    {"brightness", string.format("%d%%", brightness)}}
 end
 evogui.update_day_time = update_day_time
+
+local function on_evoGUI_size(event)
+    local player = game.get_player(event.player_index)
+
+    if player.gui.top.evoGUI.evolution_factor ~= nil then
+        -- hide the extra bits
+        player.gui.top.evoGUI.evolution_factor.destroy()
+        player.gui.top.evoGUI.run_time.destroy()
+        player.gui.top.evoGUI.first_line.evoGUI_size.caption = "+"
+    else
+        -- show the extra bits
+        player.gui.top.evoGUI.add{type="label", name="evolution_factor"}
+        evogui.update_evolution(player.gui.top.evoGUI.evolution_factor)
+
+        player.gui.top.evoGUI.add{type="label", name="run_time"}
+        evogui.update_run_time(player.gui.top.evoGUI.run_time)
+
+        player.gui.top.evoGUI.first_line.evoGUI_size.caption = "-"
+    end
+end
+evogui.on_click["evoGUI_size"] = on_evoGUI_size
