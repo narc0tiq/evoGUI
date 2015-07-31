@@ -9,8 +9,6 @@ local sensor = ValueSensor.new("play_time", function(self)
             string.format("%d:%02d:%02d", play_time_hours, play_time_minutes % 60, play_time_seconds % 60)}
 end)
 
-if not evogui then evogui = {} end
-
 function evogui.update_play_time(element)
     element.caption = sensor:get_line()
 end

@@ -16,8 +16,6 @@ local sensor = ValueSensor.new("day_time", function(self)
             string.format("%d%%", brightness)}
 end)
 
-if not evogui then evogui = {} end
-
 function evogui.update_day_time(element)
     element.caption = sensor:get_line()
 end
