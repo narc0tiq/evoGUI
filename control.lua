@@ -14,6 +14,7 @@ end)
 
 game.on_event(defines.events.on_gui_click, function(event)
     if evogui.on_click[event.element.name] ~= nil then
-        evogui.on_click[event.element.name](event)
+        local status, err = pcall(evogui.on_click[event.element.name], event)
+        if err then log(string.format("[evoGUI|on_gui_click|%s] Error: %s", event.element.name, err)) end
     end
 end)
