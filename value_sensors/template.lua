@@ -11,7 +11,7 @@ function ValueSensor.new(name, get_line)
         ["format_key"] = "sensor."..name..".format",
         ["get_line"] = get_line,
     }
-    evogui.value_sensors[name] = sensor
+    table.insert(evogui.value_sensors, sensor)
     return sensor
 end
 
