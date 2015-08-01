@@ -14,4 +14,4 @@ is licensed under the [MIT license][mit], available in this package in the file
 
 ## Statistics ##
 
-20 exceptions were caught during the creation of this mod.
+78 exceptions were caught during the creation of this mod.
