@@ -34,7 +34,8 @@ end
 function evogui.create_or_update(player)
     local root = player.gui.top.evoGUI
     local destroyed = false
-    if root and (not global.evoGUI or not global.evoGUI.version or global.evoGUI.version ~= "0.3.0") then
+    if root and (not global.evoGUI or not global.evoGUI[player.name] or
+        not global.evoGUI[player.name].version or global.evoGUI[player.name].version ~= "0.3.0") then
         player.gui.top.evoGUI.destroy()
         destroyed = true
     end
@@ -52,7 +53,8 @@ function evogui.create_or_update(player)
         sensors.add{type="label", name="play_time"}
 
         if not global.evoGUI then global.evoGUI = {} end
-        global.evoGUI.version = "0.3.0"
+        if not global.evoGUI[player.name] then global.evoGUI[player.name] = {} end
+        global.evoGUI[player.name].version = "0.3.0"
     end
 end
 
