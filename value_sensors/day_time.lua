@@ -1,6 +1,8 @@
 require "template"
 
-local sensor = ValueSensor.new("day_time", function(self)
+local sensor = ValueSensor.new("day_time")
+
+function sensor:get_line()
     -- 0.5 is midnight; let's make days *start* at midnight instead.
     local day_time = math.fmod(game.daytime + 0.5, 1)
 
@@ -14,8 +16,4 @@ local sensor = ValueSensor.new("day_time", function(self)
     return {self.format_key,
             string.format("%d:%02d", day_time_hours, rounded_minutes % 60),
             string.format("%d%%", brightness)}
-end)
-
-function evogui.update_day_time(element)
-    element.caption = sensor:get_line()
 end
