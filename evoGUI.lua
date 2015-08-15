@@ -3,6 +3,7 @@ require "value_sensors.day_time"
 require "value_sensors.evolution_factor"
 require "value_sensors.play_time"
 require "value_sensors.player_locations"
+require "value_sensors.pollution_around_player"
 require "settingsGUI"
 
 if not evogui then evogui = {} end
@@ -36,18 +37,27 @@ function evogui.create_player_globals(player)
     local player_settings = global.evogui[player.name]
 
     if not player_settings.version then player_settings.version = "" end
+
     if not player_settings.always_visible then
         player_settings.always_visible = {
             ["evolution_factor"] = true,
             ["play_time"] = true,
         }
     end
+
     if not player_settings.in_popup then
         player_settings.in_popup = {
             ["day_time"] = true,
         }
     end
+
     if not player_settings.popup_open then player_settings.popup_open = false end
+
+    if not player_settings.personal_sensors then
+        player_settings.personal_sensors = {}
+
+        table.insert(player_settings.personal_sensors, PollutionSensor.new(player))
+    end
 end
 
 
@@ -96,11 +106,9 @@ function evogui.create_sensor_display(player)
 end
 
 
-function evogui.update_av(player, element)
-    local always_visible = global.evogui[player.name].always_visible
-
-    for _, sensor in ipairs(evogui.value_sensors) do
-        if always_visible[sensor.name] then
+local function update_sensors(element, sensor_list, active_sensors)
+    for _, sensor in ipairs(sensor_list) do
+        if active_sensors[sensor.name] then
             sensor:create_ui(element)
             sensor:update_ui(element)
         else
@@ -110,19 +118,21 @@ function evogui.update_av(player, element)
 end
 
 
+function evogui.update_av(player, element)
+    local always_visible = global.evogui[player.name].always_visible
+
+    update_sensors(element, evogui.value_sensors, always_visible)
+    update_sensors(element, global.evogui[player.name].personal_sensors, always_visible)
+end
+
+
 function evogui.update_ip(player, element)
     if not global.evogui[player.name].popup_open then return end
 
     local in_popup = global.evogui[player.name].in_popup
 
-    for _, sensor in ipairs(evogui.value_sensors) do
-        if in_popup[sensor.name] then
-            sensor:create_ui(element)
-            sensor:update_ui(element)
-        else
-            sensor:delete_ui(element)
-        end
-    end
+    update_sensors(element, evogui.value_sensors, in_popup)
+    update_sensors(element, global.evogui[player.name].personal_sensors, in_popup)
 end
 
 

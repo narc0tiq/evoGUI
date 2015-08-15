@@ -31,8 +31,11 @@ function ValueSensor.new(name)
         end
     end
 
-    table.insert(evogui.value_sensors, sensor)
     return sensor
+end
+
+function ValueSensor.register(sensor)
+    table.insert(evogui.value_sensors, sensor)
 end
 
 return ValueSensor

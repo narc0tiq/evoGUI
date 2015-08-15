@@ -42,29 +42,40 @@ local function toggle_in_popup(event)
 end
 
 
+local function add_sensor_table_row(table, sensor, always_visible, in_popup)
+    local sensor_always_visible = always_visible[sensor.name] ~= nil
+    local sensor_in_popup = in_popup[sensor.name] ~= nil
+
+    table.add{type="label", caption=sensor.display_name}
+    table.add{type="checkbox", name="AV_"..sensor.name,
+        caption={"settings_always_visible"}, state=sensor_always_visible}
+    table.add{type="checkbox", name="IP_"..sensor.name,
+        caption={"settings_in_popup"}, state=sensor_in_popup}
+
+    evogui.on_click["AV_"..sensor.name] = toggle_always_visible
+    evogui.on_click["IP_"..sensor.name] = toggle_in_popup
+end
+
+
 function evogui.on_click.evoGUI_settings(event)
     local player = game.get_player(event.player_index)
     if player.gui.center.evoGUI_settingsGUI then return end
 
     evogui.create_player_globals(player)
-    local always_visible = global.evogui[player.name].always_visible
-    local in_popup = global.evogui[player.name].in_popup
+    local player_data = global.evogui[player.name]
 
-    local root = player.gui.center.add{type="frame", direction="vertical", name="evoGUI_settingsGUI"}
+    local root = player.gui.center.add{type="frame",
+                                       direction="vertical",
+                                       name="evoGUI_settingsGUI",
+                                       caption={"settings_title"}}
     local table = root.add{type="table", colspan=3}
 
     for _, sensor in ipairs(evogui.value_sensors) do
-        local sensor_always_visible = always_visible[sensor.name] ~= nil
-        local sensor_in_popup = in_popup[sensor.name] ~= nil
+        add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)
+    end
 
-        table.add{type="label", caption=sensor.display_name}
-        table.add{type="checkbox", name="AV_"..sensor.name,
-            caption={"settings_always_visible"}, state=sensor_always_visible}
-        table.add{type="checkbox", name="IP_"..sensor.name,
-            caption={"settings_in_popup"}, state=sensor_in_popup}
-
-        evogui.on_click["AV_"..sensor.name] = toggle_always_visible
-        evogui.on_click["IP_"..sensor.name] = toggle_in_popup
+    for _, sensor in ipairs(player_data.personal_sensors) do
+        add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)
     end
 
     local buttons = root.add{type="flow", direction="horizontal"}

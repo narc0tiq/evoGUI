@@ -17,3 +17,5 @@ function sensor:get_line()
             string.format("%d:%02d", day_time_hours, rounded_minutes % 60),
             string.format("%d%%", brightness)}
 end
+
+ValueSensor.register(sensor)

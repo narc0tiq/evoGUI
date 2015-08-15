@@ -10,3 +10,5 @@ function sensor:get_line()
     return {self.format_key,
             string.format("%d:%02d:%02d", play_time_hours, play_time_minutes % 60, play_time_seconds % 60)}
 end
+
+ValueSensor.register(sensor)

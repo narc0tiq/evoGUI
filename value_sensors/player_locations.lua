@@ -28,3 +28,5 @@ function sensor:update_ui(owner)
         self.player_list[p.name].caption = desc
     end
 end
+
+ValueSensor.register(sensor)
