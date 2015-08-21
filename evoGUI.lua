@@ -84,6 +84,9 @@ function evogui.create_sensor_display(player)
                            name="evoGUI_toggle_popup",
                            caption="+",
                            style="evoGUI_small_button_style"}
+        if global.evogui[player.name].popup_open then
+            action_buttons.evoGUI_toggle_popup.caption = "-"
+        end
         action_buttons.add{type="button",
                            name="evoGUI_settings",
                            caption="s",
