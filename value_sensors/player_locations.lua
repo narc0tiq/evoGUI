@@ -10,22 +10,18 @@ function sensor:create_ui(owner)
                                style="description_flow_style"}
 
         root.add{type="label", caption={self.format_key}}
-        self.player_list = root.add{type="table",
-                                    name="player_list",
-                                    colspan=1}
+        root.add{type="table", name="player_list", colspan=1}
     end
 end
 
 function sensor:update_ui(owner)
-    if self.player_list == nil or not self.player_list.valid then return end
-
     for _, p in ipairs(game.players) do
-        if self.player_list[p.name] == nil then
-            self.player_list.add{type="label", name=p.name}
+        if owner[self.name].player_list[p.name] == nil then
+            owner[self.name].player_list.add{type="label", name=p.name}
         end
         local desc = string.format("%s @(%d, %d on %s)", p.name,
             p.position.x, p.position.y, p.surface.name)
-        self.player_list[p.name].caption = desc
+        owner[self.name].player_list[p.name].caption = desc
     end
 end
 
