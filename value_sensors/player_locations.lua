@@ -17,7 +17,7 @@ function sensor:create_ui(owner)
 end
 
 function sensor:update_ui(owner)
-    if self.player_list == nil then return end
+    if self.player_list == nil or not self.player_list.valid then return end
 
     for _, p in ipairs(game.players) do
         if self.player_list[p.name] == nil then

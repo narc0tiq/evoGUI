@@ -10,7 +10,7 @@ if not evogui then evogui = {} end
 if not evogui.on_click then evogui.on_click = {} end
 
 evogui.update_delay = 60 -- ticks to wait between each GUI update
-local EXPECTED_VERSION = "0.3.1"
+local EXPECTED_VERSION = "0.3.2"
 
 
 function evogui.update_gui()
