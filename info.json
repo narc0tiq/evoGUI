@@ -1,6 +1,6 @@
 {
   "name": "EvoGUI",
-  "version": "0.3.3",
+  "version": "{{VERSION}}",
   "title": "Evolution Factor Indicator",
   "author": "Octav \"narc\" Sandulescu",
   "contact": "factorio-mods@narc.ro",
