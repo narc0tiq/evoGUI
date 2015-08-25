@@ -1,5 +1,5 @@
 {
-  "name": "EvoGUI",
+  "name": "{{MOD_NAME}}",
   "version": "{{VERSION}}",
   "title": "Evolution Factor Indicator",
   "author": "Octav \"narc\" Sandulescu",
