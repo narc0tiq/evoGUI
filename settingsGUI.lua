@@ -42,6 +42,30 @@ local function toggle_in_popup(event)
 end
 
 
+local function trigger_settings_gui(event)
+    local player = game.get_player(event.player_index)
+
+    if event.element.name:sub(1,11) ~= "EvoGUI_SET_" then
+        error(string.format("trigger_settings_gui called on the wrong thing: %s", event.element.name))
+        return
+    end
+
+    local sensor_name = event.element.name:sub(12,-1)
+    local sensor = ValueSensor.get_by_name(sensor_name)
+    if sensor == nil then
+        error(string.format("trigger_settings_gui unable to find sensor: %s", event.element.name))
+        return
+    end
+
+    if sensor.settings_gui == nil then
+        error(string.format("trigger_settings_gui can't trigger settings-less sensor settings: %s", event.element.name))
+        return
+    end
+
+    sensor:settings_gui(event.player_index)
+end
+
+
 local function add_sensor_table_row(table, sensor, always_visible, in_popup)
     local sensor_always_visible = always_visible[sensor.name] ~= nil
     local sensor_in_popup = in_popup[sensor.name] ~= nil
@@ -51,6 +75,14 @@ local function add_sensor_table_row(table, sensor, always_visible, in_popup)
         caption={"settings_always_visible"}, state=sensor_always_visible}
     table.add{type="checkbox", name="IP_"..sensor.name,
         caption={"settings_in_popup"}, state=sensor_in_popup}
+    if sensor.settings_gui ~= nil then
+        local button_name = "EvoGUI_SET_"..sensor.name
+        table.add{type="button", name=button_name,
+            caption="...", style="evoGUI_small_button_style"}
+        evogui.on_click[button_name] = trigger_settings_gui
+    else
+        table.add{type="flow"} -- empty, but there has to be _something_ there.
+    end
 
     evogui.on_click["AV_"..sensor.name] = toggle_always_visible
     evogui.on_click["IP_"..sensor.name] = toggle_in_popup
@@ -59,7 +91,10 @@ end
 
 function evogui.on_click.evoGUI_settings(event)
     local player = game.get_player(event.player_index)
-    if player.gui.center.evoGUI_settingsGUI then return end
+    if player.gui.center.evoGUI_settingsGUI ~= nil then
+        player.gui.center.evoGUI_settingsGUI.destroy()
+        return
+    end
 
     evogui.create_player_globals(player)
     local player_data = global.evogui[player.name]
@@ -68,7 +103,7 @@ function evogui.on_click.evoGUI_settings(event)
                                        direction="vertical",
                                        name="evoGUI_settingsGUI",
                                        caption={"settings_title"}}
-    local table = root.add{type="table", colspan=3}
+    local table = root.add{type="table", colspan=4}
 
     for _, sensor in ipairs(evogui.value_sensors) do
         add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)

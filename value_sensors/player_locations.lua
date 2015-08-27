@@ -14,6 +14,13 @@ function sensor:create_ui(owner)
     end
 end
 
+--[[
+function sensor:settings_gui(player_index)
+    local player = game.get_player(player_index)
+    player.print("Hello, world")
+end
+]]
+
 
 local function directions(source, destination)
     -- Directions to or from positionless things? Hrm.

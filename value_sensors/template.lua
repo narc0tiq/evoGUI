@@ -38,4 +38,13 @@ function ValueSensor.register(sensor)
     table.insert(evogui.value_sensors, sensor)
 end
 
+function ValueSensor.get_by_name(sensor_name)
+    for _, sensor in pairs(evogui.value_sensors) do
+        if sensor.name == sensor_name then
+            return sensor
+        end
+    end
+    return nil
+end
+
 return ValueSensor
