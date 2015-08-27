@@ -42,6 +42,11 @@ local function toggle_in_popup(event)
 end
 
 
+local function on_sensor_settings_closed(player_index)
+    evogui.on_click.evoGUI_settings({player_index = player_index})
+end
+
+
 local function trigger_settings_gui(event)
     local player = game.get_player(event.player_index)
 
@@ -62,6 +67,11 @@ local function trigger_settings_gui(event)
         return
     end
 
+    if player.gui.center.evoGUI_settingsGUI ~= nil then
+        player.gui.center.evoGUI_settingsGUI.destroy()
+    end
+
+    sensor.settings_gui_closed = on_sensor_settings_closed
     sensor:settings_gui(event.player_index)
 end
 
@@ -116,6 +126,7 @@ function evogui.on_click.evoGUI_settings(event)
     local buttons = root.add{type="flow", direction="horizontal"}
     buttons.add{type="button", name="evoGUI_settings_close", caption={"settings_close"}}
 end
+
 
 function evogui.on_click.evoGUI_settings_close(event)
     local player = game.get_player(event.player_index)
