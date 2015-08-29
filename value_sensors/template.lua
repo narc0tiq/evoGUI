@@ -31,6 +31,10 @@ function ValueSensor.new(name)
         end
     end
 
+    function sensor:settings_root_name()
+        return self.name.."_settings"
+    end
+
     return sensor
 end
 

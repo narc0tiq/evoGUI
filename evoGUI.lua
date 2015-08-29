@@ -59,6 +59,19 @@ function evogui.create_player_globals(player)
 
         table.insert(player_settings.personal_sensors, PollutionSensor.new(player))
     end
+
+    if not player_settings.sensor_settings then
+        player_settings.sensor_settings = {}
+    end
+
+    if not player_settings.sensor_settings['player_locations'] then
+        player_settings.sensor_settings['player_locations'] = {
+            ['show_player_index'] = false,
+            ['show_position'] = false,
+            ['show_surface'] = false,
+            ['show_direction'] = true,
+        }
+    end
 end
 
 

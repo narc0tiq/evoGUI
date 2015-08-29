@@ -1,5 +1,6 @@
 require "template"
 
+if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("player_locations")
 
 function sensor:create_ui(owner)
@@ -14,12 +15,74 @@ function sensor:create_ui(owner)
     end
 end
 
---[[
+
+function sensor:close_settings_gui(player_index)
+    local player = game.get_player(player_index)
+    local root_name = self:settings_root_name()
+
+    player.gui.center[root_name].destroy()
+
+    if self.settings_gui_closed then self.settings_gui_closed(player_index) end
+end
+
+
 function sensor:settings_gui(player_index)
     local player = game.get_player(player_index)
-    player.print("Hello, world")
+    local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
+    local root_name = self:settings_root_name()
+
+    local root = player.gui.center.add{type="frame",
+                                       name=root_name,
+                                       direction="vertical",
+                                       caption={"sensor.player_locations.settings.title"}}
+    root.add{type="checkbox", name="evogui_show_player_index",
+             caption={"sensor.player_locations.settings.show_player_index"},
+             state=sensor_settings.show_player_index}
+    root.add{type="checkbox", name="evogui_show_position",
+             caption={"sensor.player_locations.settings.show_position"},
+             state=sensor_settings.show_position}
+    root.add{type="checkbox", name="evogui_show_surface",
+             caption={"sensor.player_locations.settings.show_surface"},
+             state=sensor_settings.show_surface}
+    root.add{type="checkbox", name="evogui_show_direction",
+             caption={"sensor.player_locations.settings.show_direction"},
+             state=sensor_settings.show_direction}
+
+    local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
+    evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
 end
-]]
+
+
+function evogui.on_click.evogui_show_player_index(event)
+    local player = game.get_player(event.player_index)
+    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
+
+    sensor_settings.show_player_index = event.element.state
+end
+
+
+function evogui.on_click.evogui_show_position(event)
+    local player = game.get_player(event.player_index)
+    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
+
+    sensor_settings.show_position = event.element.state
+end
+
+
+function evogui.on_click.evogui_show_surface(event)
+    local player = game.get_player(event.player_index)
+    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
+
+    sensor_settings.show_surface = event.element.state
+end
+
+
+function evogui.on_click.evogui_show_direction(event)
+    local player = game.get_player(event.player_index)
+    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
+
+    sensor_settings.show_direction = event.element.state
+end
 
 
 local function directions(source, destination)
@@ -50,6 +113,9 @@ end
 
 
 function sensor:update_ui(owner)
+    local player = game.get_player(owner.player_index)
+    local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
+
     for _, p in ipairs(game.players) do
         if owner[self.name].player_list[p.name] == nil then
             owner[self.name].player_list.add{type="label", name=p.name}
@@ -63,8 +129,31 @@ function sensor:update_ui(owner)
             direction = directions(current_player, p)
         end
 
-        local desc = string.format("(%d) %s @(%d, %d on %s) %s", p.index,
-            p.name, p.position.x, p.position.y, p.surface.name, direction)
+        local desc = {''}
+        if sensor_settings.show_player_index then
+            table.insert(desc, string.format('(%d) ', p.index))
+        end
+
+        table.insert(desc, p.name)
+
+        if sensor_settings.show_position or sensor_settings.show_surface then
+            table.insert(desc, ' (')
+            if sensor_settings.show_position then
+                table.insert(desc, string.format('@%d, %d', p.position.x, p.position.y))
+            end
+            if sensor_settings.show_surface then
+                if sensor_settings.show_position then
+                    table.insert(desc, ' ')
+                end
+                table.insert(desc, {"sensor.player_locations.surface_fragment", p.surface.name})
+            end
+            table.insert(desc, ')')
+        end
+
+        if sensor_settings.show_direction then
+            table.insert(desc, ' ' .. direction)
+        end
+
         owner[self.name].player_list[p.name].caption = desc
     end
 end
