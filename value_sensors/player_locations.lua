@@ -115,10 +115,20 @@ end
 function sensor:update_ui(owner)
     local player = game.get_player(owner.player_index)
     local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
+    local gui_list = owner[self.name].player_list
 
     for _, p in ipairs(game.players) do
-        if owner[self.name].player_list[p.name] == nil then
-            owner[self.name].player_list.add{type="label", name=p.name}
+        if not p.name or p.name == '' then
+            if gui_list.error == nil then
+                gui_list.add{type="label", name="error", caption={"sensor.player_locations.err_no_name"}}
+            end
+            break
+        end
+
+        if gui_list.error ~= nil then gui_list.error.destroy() end
+
+        if gui_list[p.name] == nil then
+            gui_list.add{type="label", name=p.name}
         end
 
         local direction = '?'
@@ -154,7 +164,7 @@ function sensor:update_ui(owner)
             table.insert(desc, ' ' .. direction)
         end
 
-        owner[self.name].player_list[p.name].caption = desc
+        gui_list[p.name].caption = desc
     end
 end
 
