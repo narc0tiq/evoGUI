@@ -10,7 +10,7 @@ local function toggle_always_visible(event)
     local player = game.get_player(event.player_index)
 
     if event.element.name:sub(1,3) ~= "AV_" then
-        error(string.format("toggle_always_visible called on the wrong thing: %s", event.element.name))
+        error({"err_settings_badcall", "toggle_always_visible"})
         return
     end
 
@@ -28,7 +28,7 @@ local function toggle_in_popup(event)
     local player = game.get_player(event.player_index)
 
     if event.element.name:sub(1,3) ~= "IP_" then
-        error(string.format("toggle_in_popup called on the wrong thing: %s", event.element.name))
+        error({"err_settings_badcall", "toggle_in_popup"})
         return
     end
 
@@ -51,19 +51,19 @@ local function trigger_settings_gui(event)
     local player = game.get_player(event.player_index)
 
     if event.element.name:sub(1,11) ~= "EvoGUI_SET_" then
-        error(string.format("trigger_settings_gui called on the wrong thing: %s", event.element.name))
+        error({"err_settings_badcall", "trigger_settings_gui"})
         return
     end
 
     local sensor_name = event.element.name:sub(12,-1)
     local sensor = ValueSensor.get_by_name(sensor_name)
     if sensor == nil then
-        error(string.format("trigger_settings_gui unable to find sensor: %s", event.element.name))
+        error({"err_settings_whatsensor", "trigger_settings_gui"})
         return
     end
 
     if sensor.settings_gui == nil then
-        error(string.format("trigger_settings_gui can't trigger settings-less sensor settings: %s", event.element.name))
+        error({"err_settings_whatsettings", "trigger_settings_gui"})
         return
     end
 
