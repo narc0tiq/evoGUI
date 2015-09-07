@@ -72,6 +72,13 @@ function evogui.create_player_globals(player)
             ['show_direction'] = true,
         }
     end
+
+    if not player_settings.sensor_settings['day_time'] then
+        player_settings.sensor_settings['day_time'] = {
+            ['show_day_number'] = false,
+            ['minute_rounding'] = true,
+        }
+    end
 end
 
 

@@ -3,6 +3,12 @@ that informs you of the current biter evolution level, as well as your play
 time.
 
 
+## Many thanks for ##
+
+* The Hebrew translation by JoCKeRiL
+* The many downloads so far! Glad you guys are liking it.
+
+
 ## License ##
 
 The source of **EvoGUI** is Copyright 2015 Octav "narc" Sandulescu. It
