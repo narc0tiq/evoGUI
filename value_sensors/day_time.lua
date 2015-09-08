@@ -64,30 +64,16 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_show_day_number",
              caption={"sensor.day_time.settings.show_day_number"},
              state=sensor_settings.show_day_number}
+    evogui.on_click.evogui_show_day_number = self:make_on_click_checkbox_handler("show_day_number")
+
     root.add{type="checkbox", name="evogui_minute_rounding",
              caption={"sensor.day_time.settings.minute_rounding"},
              state=sensor_settings.minute_rounding}
+    evogui.on_click.evogui_minute_rounding = self:make_on_click_checkbox_handler("minute_rounding")
 
     local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
     evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
 end
-
-
-function evogui.on_click.evogui_show_day_number(event)
-    local player = game.get_player(event.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings["day_time"]
-
-    sensor_settings.show_day_number = event.element.state
-end
-
-
-function evogui.on_click.evogui_minute_rounding(event)
-    local player = game.get_player(event.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings["day_time"]
-
-    sensor_settings.minute_rounding = event.element.state
-end
-
 
 
 ValueSensor.register(sensor)
