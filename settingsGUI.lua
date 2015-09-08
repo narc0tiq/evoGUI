@@ -4,6 +4,7 @@ if not evogui then evogui = {} end
 if not evogui.on_click then evogui.on_click = {} end
 
 if not global.evogui then global.evogui = {} end
+if not global.settings then global.settings = {} end
 
 
 local function toggle_always_visible(event)
@@ -113,7 +114,26 @@ function evogui.on_click.evoGUI_settings(event)
                                        direction="vertical",
                                        name="evoGUI_settingsGUI",
                                        caption={"settings_title"}}
-    local table = root.add{type="table", colspan=4}
+
+    local core_settings = root.add{type="frame",
+                                   name="core_settings",
+                                   caption={"settings.core_settings.title"},
+                                   direction="vertical",
+                                   style="naked_frame_style"}
+
+    local update_freq_flow = core_settings.add{type="flow", name="update_freq_flow", direction="horizontal"}
+    update_freq_flow.add{type="label", caption={"settings.core_settings.update_freq_left"}}
+    local textfield = update_freq_flow.add{type="textfield", name="textfield", style="number_textfield_style"}
+    textfield.text=tostring(global.settings.update_delay)
+    update_freq_flow.add{type="label", caption={"settings.core_settings.update_freq_right"}}
+
+    local sensors_frame = root.add{type="frame",
+                                   name="sensors_frame",
+                                   caption={"settings.sensors_frame.title"},
+                                   direction="vertical",
+                                   style="naked_frame_style"}
+
+    local table = sensors_frame.add{type="table", name="table", colspan=4}
 
     for _, sensor in ipairs(evogui.value_sensors) do
         add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)
@@ -123,13 +143,18 @@ function evogui.on_click.evoGUI_settings(event)
         add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)
     end
 
-    local buttons = root.add{type="flow", direction="horizontal"}
+    local buttons = root.add{type="flow", name="buttons", direction="horizontal"}
     buttons.add{type="button", name="evoGUI_settings_close", caption={"settings_close"}}
 end
 
 
 function evogui.on_click.evoGUI_settings_close(event)
     local player = game.get_player(event.player_index)
+
+    local new_update_freq = tonumber(player.gui.center.evoGUI_settingsGUI.core_settings.update_freq_flow.textfield.text)
+    if new_update_freq ~= nil then
+        global.settings.update_delay = new_update_freq
+    end
 
     if player.gui.center.evoGUI_settingsGUI ~= nil then
         player.gui.center.evoGUI_settingsGUI.destroy()

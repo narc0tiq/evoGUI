@@ -38,50 +38,25 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_show_player_index",
              caption={"sensor.player_locations.settings.show_player_index"},
              state=sensor_settings.show_player_index}
+    evogui.on_click.evogui_show_player_index = self:make_on_click_checkbox_handler("show_player_index")
+
     root.add{type="checkbox", name="evogui_show_position",
              caption={"sensor.player_locations.settings.show_position"},
              state=sensor_settings.show_position}
+    evogui.on_click.evogui_show_position = self:make_on_click_checkbox_handler("show_position")
+
     root.add{type="checkbox", name="evogui_show_surface",
              caption={"sensor.player_locations.settings.show_surface"},
              state=sensor_settings.show_surface}
+    evogui.on_click.evogui_show_surface = self:make_on_click_checkbox_handler("show_surface")
+
     root.add{type="checkbox", name="evogui_show_direction",
              caption={"sensor.player_locations.settings.show_direction"},
              state=sensor_settings.show_direction}
+    evogui.on_click.evogui_show_direction = self:make_on_click_checkbox_handler("show_direction")
 
     local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
     evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
-end
-
-
-function evogui.on_click.evogui_show_player_index(event)
-    local player = game.get_player(event.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
-
-    sensor_settings.show_player_index = event.element.state
-end
-
-
-function evogui.on_click.evogui_show_position(event)
-    local player = game.get_player(event.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
-
-    sensor_settings.show_position = event.element.state
-end
-
-
-function evogui.on_click.evogui_show_surface(event)
-    local player = game.get_player(event.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
-
-    sensor_settings.show_surface = event.element.state
-end
-
-
-function evogui.on_click.evogui_show_direction(event)
-    local player = game.get_player(event.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings["player_locations"]
-
-    sensor_settings.show_direction = event.element.state
 end
 
 

@@ -35,6 +35,17 @@ function ValueSensor.new(name)
         return self.name.."_settings"
     end
 
+    function sensor:make_on_click_checkbox_handler(setting_name)
+        local sensor_name = self.name
+
+        return function(event)
+            local player = game.get_player(event.player_index)
+            local sensor_settings = global.evogui[player.name].sensor_settings[sensor_name]
+
+            sensor_settings[setting_name] = event.element.state
+        end
+    end
+
     return sensor
 end
 

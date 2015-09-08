@@ -10,12 +10,14 @@ require "remote"
 if not evogui then evogui = {} end
 if not evogui.on_click then evogui.on_click = {} end
 
-evogui.update_delay = 60 -- ticks to wait between each GUI update
 local EXPECTED_VERSION = "{{VERSION}}"
 
 
 function evogui.update_gui()
-    if (game.tick % evogui.update_delay) == 0 then
+    if not global.settings then global.settings = {} end
+    if not global.settings.update_delay then global.settings.update_delay = 60 end
+
+    if (game.tick % global.settings.update_delay) == 0 then
         for i, player in ipairs(game.players) do
             evogui.create_player_globals(player)
             evogui.create_sensor_display(player)
