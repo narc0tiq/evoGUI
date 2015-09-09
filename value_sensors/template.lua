@@ -40,6 +40,15 @@ function ValueSensor.new(name)
         return self.name.."_settings"
     end
 
+    function sensor:close_settings_gui(player_index)
+        local player = game.get_player(player_index)
+        local root_name = self:settings_root_name()
+
+        player.gui.center[root_name].destroy()
+
+        if self.settings_gui_closed then self.settings_gui_closed(player_index) end
+    end
+
     function sensor:make_on_click_checkbox_handler(setting_name)
         local sensor_name = self.name
 
