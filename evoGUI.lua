@@ -87,6 +87,13 @@ function evogui.create_player_globals(player)
             ['extra_precision'] = false,
         }
     end
+
+    if not player_settings.sensor_settings['play_time'] then
+        player_settings.sensor_settings['play_time'] = {
+            ['show_days'] = true,
+            ['show_seconds'] = true,
+        }
+    end
 end
 
 
