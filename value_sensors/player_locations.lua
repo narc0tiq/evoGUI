@@ -121,6 +121,10 @@ function sensor:update_ui(owner)
 
         table.insert(desc, p.name)
 
+        if p.connected == false then
+			table.insert(desc, " [Offline]")
+        end
+
         if sensor_settings.show_position or sensor_settings.show_surface then
             table.insert(desc, ' (')
             if sensor_settings.show_position then
