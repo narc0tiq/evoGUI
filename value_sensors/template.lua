@@ -22,6 +22,11 @@ function ValueSensor.new(name)
     end
 
     function sensor:update_ui(owner)
+        local player = game.get_player(owner.player_index)
+        local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
+
+        self.settings = sensor_settings
+
         owner[self.name].caption = self:get_line()
     end
 

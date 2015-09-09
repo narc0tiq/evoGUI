@@ -4,16 +4,6 @@ if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("day_time")
 
 
-function sensor:update_ui(owner)
-    local player = game.get_player(owner.player_index)
-    local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
-
-    self.settings = sensor_settings
-
-    owner[self.name].caption = self:get_line()
-end
-
-
 function sensor:get_line()
     -- 0.5 is midnight; let's make days *start* at midnight instead.
     local day_time = math.fmod(game.daytime + 0.5, 1)
