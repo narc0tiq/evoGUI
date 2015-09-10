@@ -22,6 +22,11 @@ function ValueSensor.new(name)
     end
 
     function sensor:update_ui(owner)
+        local player = game.get_player(owner.player_index)
+        local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
+
+        self.settings = sensor_settings
+
         owner[self.name].caption = self:get_line()
     end
 
@@ -33,6 +38,15 @@ function ValueSensor.new(name)
 
     function sensor:settings_root_name()
         return self.name.."_settings"
+    end
+
+    function sensor:close_settings_gui(player_index)
+        local player = game.get_player(player_index)
+        local root_name = self:settings_root_name()
+
+        player.gui.center[root_name].destroy()
+
+        if self.settings_gui_closed then self.settings_gui_closed(player_index) end
     end
 
     function sensor:make_on_click_checkbox_handler(setting_name)

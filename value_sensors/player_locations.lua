@@ -3,6 +3,7 @@ require "template"
 if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("player_locations")
 
+
 function sensor:create_ui(owner)
     if owner[self.name] == nil then
         local root = owner.add{type="flow",
@@ -13,16 +14,6 @@ function sensor:create_ui(owner)
         root.add{type="label", caption={self.format_key}}
         root.add{type="table", name="player_list", colspan=1}
     end
-end
-
-
-function sensor:close_settings_gui(player_index)
-    local player = game.get_player(player_index)
-    local root_name = self:settings_root_name()
-
-    player.gui.center[root_name].destroy()
-
-    if self.settings_gui_closed then self.settings_gui_closed(player_index) end
 end
 
 
@@ -120,6 +111,11 @@ function sensor:update_ui(owner)
         end
 
         table.insert(desc, p.name)
+
+        if p.connected == false then
+            table.insert(desc, ' ')
+            table.insert(desc, {"sensor.player_locations.offline_fragment"})
+        end
 
         if sensor_settings.show_position or sensor_settings.show_surface then
             table.insert(desc, ' (')
