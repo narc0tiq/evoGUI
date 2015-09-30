@@ -117,15 +117,13 @@ function evogui.create_sensor_display(player)
                                         style="description_flow_style"}
         action_buttons.add{type="button",
                            name="evoGUI_toggle_popup",
-                           caption="+",
-                           style="evoGUI_small_button_style"}
+                           style="EvoGUI_expando_closed"}
         if global.evogui[player.name].popup_open then
-            action_buttons.evoGUI_toggle_popup.caption = "-"
+            action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_open"
         end
         action_buttons.add{type="button",
                            name="evoGUI_settings",
-                           caption="s",
-                           style="evoGUI_small_button_style"}
+                           style="EvoGUI_settings"}
 
         local sensor_flow = root.add{type="flow",
                                      name="sensor_flow",
@@ -189,12 +187,12 @@ function evogui.on_click.evoGUI_toggle_popup(event)
             root.sensor_flow.in_popup[childname].destroy()
         end
 
-        root.action_buttons.evoGUI_toggle_popup.caption = "+"
+        root.action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_closed"
     else
         -- open it
         player_settings.popup_open = true
 
         evogui.update_ip(player, root.sensor_flow.in_popup)
-        root.action_buttons.evoGUI_toggle_popup.caption = "-"
+        root.action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_open"
     end
 end
