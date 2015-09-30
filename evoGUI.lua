@@ -73,7 +73,10 @@ function evogui.create_player_globals(player)
             ['show_position'] = false,
             ['show_surface'] = false,
             ['show_direction'] = true,
+            ['show_offline'] = false,
         }
+    elseif player_settings.sensor_settings['player_locations'].show_offline == nil then
+        player_settings.sensor_settings['player_locations'].show_offline = false
     end
 
     if not player_settings.sensor_settings['day_time'] then

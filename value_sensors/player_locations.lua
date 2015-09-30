@@ -46,6 +46,11 @@ function sensor:settings_gui(player_index)
              state=sensor_settings.show_direction}
     evogui.on_click.evogui_show_direction = self:make_on_click_checkbox_handler("show_direction")
 
+    root.add{type="checkbox", name="evogui_show_offline",
+             caption={"sensor.player_locations.settings.show_offline"},
+             state=sensor_settings.show_offline}
+    evogui.on_click.evogui_show_offline = self:make_on_click_checkbox_handler("show_offline")
+
     local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
     evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
 end
@@ -93,6 +98,13 @@ function sensor:update_ui(owner)
 
         if gui_list.error ~= nil then gui_list.error.destroy() end
 
+        if p.connected == false and not sensor_settings.show_offline then
+            if gui_list[p.name] and gui_list[p.name].valid then
+                gui_list[p.name].destroy()
+            end
+            goto next_player
+        end
+
         if gui_list[p.name] == nil then
             gui_list.add{type="label", name=p.name}
         end
@@ -132,10 +144,12 @@ function sensor:update_ui(owner)
         end
 
         if sensor_settings.show_direction then
-            table.insert(desc, ' ' .. direction)
+            table.insert(desc, ' ')
+            table.insert(desc, direction)
         end
 
         gui_list[p.name].caption = desc
+        ::next_player::
     end
 end
 
