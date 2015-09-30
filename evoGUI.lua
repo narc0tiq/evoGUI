@@ -1,6 +1,7 @@
 require "defines"
 require "value_sensors.day_time"
 require "value_sensors.evolution_factor"
+require "value_sensors.kill_count"
 require "value_sensors.play_time"
 require "value_sensors.player_locations"
 require "value_sensors.pollution_around_player"
