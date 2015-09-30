@@ -58,28 +58,14 @@ end
 
 local function directions(source, destination)
     -- Directions to or from positionless things? Hrm.
-    if not source.position or not destination.position then return '?' end
+    if not source.position or not destination.position then return {"direction.unknown"} end
 
     local delta_x = destination.position.x - source.position.x
     local delta_y = destination.position.y - source.position.y
 
-    if math.abs(delta_x) > math.abs(delta_y) then
-        if delta_x < -1 then
-            return '<'
-        elseif delta_x > 1 then
-            return '>'
-        else
-            return '='
-        end
-    else
-        if delta_y < -1 then
-            return '^'
-        elseif delta_y > 1 then
-            return 'v'
-        else
-            return '='
-        end
-    end
+    if math.abs(delta_x) < 2 and math.abs(delta_y) < 2 then return '' end
+
+    return evogui.get_octant_name{x=delta_x, y=delta_y}
 end
 
 

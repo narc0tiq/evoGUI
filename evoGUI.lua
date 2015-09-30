@@ -159,6 +159,25 @@ local function update_sensors(element, sensor_list, active_sensors)
 end
 
 
+local octant_names = {
+    [0] = {"direction.east"},
+    [1] = {"direction.southeast"},
+    [2] = {"direction.south"},
+    [3] = {"direction.southwest"},
+    [4] = {"direction.west"},
+    [5] = {"direction.northwest"},
+    [6] = {"direction.north"},
+    [7] = {"direction.northeast"},
+}
+
+function evogui.get_octant_name(vector)
+    local radians = math.atan2(vector.y, vector.x)
+    local octant = math.floor( 8 * radians / (2*math.pi) + 8.5 ) % 8
+
+    return octant_names[octant]
+end
+
+
 function evogui.update_av(player, element)
     local always_visible = global.evogui[player.name].always_visible
 
