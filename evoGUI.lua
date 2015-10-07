@@ -14,6 +14,12 @@ if not evogui.on_click then evogui.on_click = {} end
 local EXPECTED_VERSION = "{{VERSION}}"
 
 
+function evogui.format_number(n) -- credit http://richard.warburton.it
+    local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
+    return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
+end
+
+
 function evogui.update_gui()
     if not global.settings then global.settings = {} end
     if not global.settings.update_delay then global.settings.update_delay = 60 end

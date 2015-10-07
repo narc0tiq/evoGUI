@@ -67,17 +67,17 @@ function sensor:update_ui(owner)
 
     local biter_kills = {"sensor.kill_count.biter_fragment_single"}
     if biter_count ~= 1 then
-        biter_kills = {"sensor.kill_count.biter_fragment_multiple", biter_count}
+        biter_kills = {"sensor.kill_count.biter_fragment_multiple", evogui.format_number(biter_count)}
     end
 
     local spawner_kills = {"sensor.kill_count.spawner_fragment_single"}
     if spawner_count ~= 1 then
-        spawner_kills = {"sensor.kill_count.spawner_fragment_multiple", spawner_count}
+        spawner_kills = {"sensor.kill_count.spawner_fragment_multiple", evogui.format_number(spawner_count)}
     end
 
     local other_kills = {"sensor.kill_count.other_fragment_single"}
     if other_count ~= 1 then
-        other_kills = {"sensor.kill_count.other_fragment_multiple", other_count}
+        other_kills = {"sensor.kill_count.other_fragment_multiple", evogui.format_number(other_count)}
     end
 
     owner[self.name].caption = {self.format_key, biter_kills, spawner_kills, other_kills}
