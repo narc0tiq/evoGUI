@@ -1,6 +1,7 @@
 require "defines"
 require "value_sensors.day_time"
 require "value_sensors.evolution_factor"
+require "value_sensors.kill_count"
 require "value_sensors.play_time"
 require "value_sensors.player_locations"
 require "value_sensors.pollution_around_player"
@@ -11,6 +12,12 @@ if not evogui then evogui = {} end
 if not evogui.on_click then evogui.on_click = {} end
 
 local EXPECTED_VERSION = "{{VERSION}}"
+
+
+function evogui.format_number(n) -- credit http://richard.warburton.it
+    local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
+    return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
+end
 
 
 function evogui.update_gui()
@@ -72,7 +79,10 @@ function evogui.create_player_globals(player)
             ['show_position'] = false,
             ['show_surface'] = false,
             ['show_direction'] = true,
+            ['show_offline'] = false,
         }
+    elseif player_settings.sensor_settings['player_locations'].show_offline == nil then
+        player_settings.sensor_settings['player_locations'].show_offline = false
     end
 
     if not player_settings.sensor_settings['day_time'] then
@@ -117,15 +127,13 @@ function evogui.create_sensor_display(player)
                                         style="description_flow_style"}
         action_buttons.add{type="button",
                            name="evoGUI_toggle_popup",
-                           caption="+",
-                           style="evoGUI_small_button_style"}
+                           style="EvoGUI_expando_closed"}
         if global.evogui[player.name].popup_open then
-            action_buttons.evoGUI_toggle_popup.caption = "-"
+            action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_open"
         end
         action_buttons.add{type="button",
                            name="evoGUI_settings",
-                           caption="s",
-                           style="evoGUI_small_button_style"}
+                           style="EvoGUI_settings"}
 
         local sensor_flow = root.add{type="flow",
                                      name="sensor_flow",
@@ -154,6 +162,25 @@ local function update_sensors(element, sensor_list, active_sensors)
             sensor:delete_ui(element)
         end
     end
+end
+
+
+local octant_names = {
+    [0] = {"direction.east"},
+    [1] = {"direction.southeast"},
+    [2] = {"direction.south"},
+    [3] = {"direction.southwest"},
+    [4] = {"direction.west"},
+    [5] = {"direction.northwest"},
+    [6] = {"direction.north"},
+    [7] = {"direction.northeast"},
+}
+
+function evogui.get_octant_name(vector)
+    local radians = math.atan2(vector.y, vector.x)
+    local octant = math.floor( 8 * radians / (2*math.pi) + 8.5 ) % 8
+
+    return octant_names[octant]
 end
 
 
@@ -189,12 +216,12 @@ function evogui.on_click.evoGUI_toggle_popup(event)
             root.sensor_flow.in_popup[childname].destroy()
         end
 
-        root.action_buttons.evoGUI_toggle_popup.caption = "+"
+        root.action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_closed"
     else
         -- open it
         player_settings.popup_open = true
 
         evogui.update_ip(player, root.sensor_flow.in_popup)
-        root.action_buttons.evoGUI_toggle_popup.caption = "-"
+        root.action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_open"
     end
 end

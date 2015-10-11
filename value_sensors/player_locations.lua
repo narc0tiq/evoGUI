@@ -46,6 +46,11 @@ function sensor:settings_gui(player_index)
              state=sensor_settings.show_direction}
     evogui.on_click.evogui_show_direction = self:make_on_click_checkbox_handler("show_direction")
 
+    root.add{type="checkbox", name="evogui_show_offline",
+             caption={"sensor.player_locations.settings.show_offline"},
+             state=sensor_settings.show_offline}
+    evogui.on_click.evogui_show_offline = self:make_on_click_checkbox_handler("show_offline")
+
     local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
     evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
 end
@@ -53,28 +58,14 @@ end
 
 local function directions(source, destination)
     -- Directions to or from positionless things? Hrm.
-    if not source.position or not destination.position then return '?' end
+    if not source.position or not destination.position then return {"direction.unknown"} end
 
     local delta_x = destination.position.x - source.position.x
     local delta_y = destination.position.y - source.position.y
 
-    if math.abs(delta_x) > math.abs(delta_y) then
-        if delta_x < -1 then
-            return '<'
-        elseif delta_x > 1 then
-            return '>'
-        else
-            return '='
-        end
-    else
-        if delta_y < -1 then
-            return '^'
-        elseif delta_y > 1 then
-            return 'v'
-        else
-            return '='
-        end
-    end
+    if math.abs(delta_x) < 2 and math.abs(delta_y) < 2 then return '' end
+
+    return evogui.get_octant_name{x=delta_x, y=delta_y}
 end
 
 
@@ -92,6 +83,13 @@ function sensor:update_ui(owner)
         end
 
         if gui_list.error ~= nil then gui_list.error.destroy() end
+
+        if p.connected == false and not sensor_settings.show_offline then
+            if gui_list[p.name] and gui_list[p.name].valid then
+                gui_list[p.name].destroy()
+            end
+            goto next_player
+        end
 
         if gui_list[p.name] == nil then
             gui_list.add{type="label", name=p.name}
@@ -132,10 +130,12 @@ function sensor:update_ui(owner)
         end
 
         if sensor_settings.show_direction then
-            table.insert(desc, ' ' .. direction)
+            table.insert(desc, ' ')
+            table.insert(desc, direction)
         end
 
         gui_list[p.name].caption = desc
+        ::next_player::
     end
 end
 

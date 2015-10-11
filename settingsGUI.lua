@@ -89,7 +89,7 @@ local function add_sensor_table_row(table, sensor, always_visible, in_popup)
     if sensor.settings_gui ~= nil then
         local button_name = "EvoGUI_SET_"..sensor.name
         table.add{type="button", name=button_name,
-            caption="...", style="evoGUI_small_button_style"}
+            style="EvoGUI_settings"}
         evogui.on_click[button_name] = trigger_settings_gui
     else
         table.add{type="flow"} -- empty, but there has to be _something_ there.
