@@ -9,12 +9,12 @@ function evogui.log(message)
     end
 end
 
-game.on_event(defines.events.on_tick, function(event)
+script.on_event(defines.events.on_tick, function(event)
     local status, err = pcall(evogui.update_gui)
     if err then evogui.log({"err_generic", "on_tick", err}) end
 end)
 
-game.on_event(defines.events.on_gui_click, function(event)
+script.on_event(defines.events.on_gui_click, function(event)
     if evogui.on_click[event.element.name] ~= nil then
         local status, err = pcall(evogui.on_click[event.element.name], event)
         if err then
