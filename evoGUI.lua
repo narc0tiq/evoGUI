@@ -11,31 +11,45 @@ require "remote"
 if not evogui then evogui = {} end
 if not evogui.on_click then evogui.on_click = {} end
 
-local EXPECTED_VERSION = "{{VERSION}}"
 
-
-function evogui.format_number(n) -- credit http://richard.warburton.it
-    local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
-    return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
-end
-
-
-function evogui.update_gui()
+function evogui.mod_init()
     if not global.settings then global.settings = {} end
     if not global.settings.update_delay then global.settings.update_delay = 60 end
 
-    if (game.tick % global.settings.update_delay) == 0 then
-        for i, player in ipairs(game.players) do
-            evogui.create_player_globals(player)
-            evogui.create_sensor_display(player)
+    for _, player in pairs(game.players) do
+        evogui.create_player_globals(player)
+        evogui.create_sensor_display(player)
+    end
+end
 
-            local player_settings = global.evogui[player.name]
 
-            local sensor_flow = player.gui.top.evoGUI.sensor_flow
-            evogui.update_av(player, sensor_flow.always_visible)
-            if player_settings.popup_open then
-                evogui.update_ip(player, sensor_flow.in_popup)
-            end
+function evogui.mod_update(data)
+    if data.mod_changes["{{MOD_NAME}}"] then
+        -- TODO: If a more major migration ever needs doing, do that here.
+        -- Otherwise, just falling back to mod_init should work fine.
+        evogui.mod_init()
+    end
+end
+
+
+function evogui.new_player(event)
+    local player = game.get_player(event.player_index)
+
+    evogui.create_player_globals(player)
+    evogui.create_sensor_display(player)
+end
+
+
+function evogui.update_gui(event)
+    if (event.tick % global.settings.update_delay) ~= 0 then return end
+
+    for _, player in pairs(game.players) do
+        local player_settings = global.evogui[player.name]
+
+        local sensor_flow = player.gui.top.evoGUI.sensor_flow
+        evogui.update_av(player, sensor_flow.always_visible)
+        if player_settings.popup_open then
+            evogui.update_ip(player, sensor_flow.in_popup)
         end
     end
 end
@@ -82,6 +96,7 @@ function evogui.create_player_globals(player)
             ['show_offline'] = false,
         }
     elseif player_settings.sensor_settings['player_locations'].show_offline == nil then
+        -- 0.4.3 new feature (783e3d68)
         player_settings.sensor_settings['player_locations'].show_offline = false
     end
 
@@ -110,7 +125,7 @@ end
 function evogui.create_sensor_display(player)
     local root = player.gui.top.evoGUI
     local destroyed = false
-    if root and global.evogui[player.name].version ~= EXPECTED_VERSION then
+    if root then
         player.gui.top.evoGUI.destroy()
         destroyed = true
     end
@@ -147,8 +162,6 @@ function evogui.create_sensor_display(player)
                         name="in_popup",
                         direction="vertical",
                         style="description_flow_style"}
-
-        global.evogui[player.name].version = EXPECTED_VERSION
     end
 end
 
@@ -156,31 +169,15 @@ end
 local function update_sensors(element, sensor_list, active_sensors)
     for _, sensor in ipairs(sensor_list) do
         if active_sensors[sensor.name] then
-            sensor:create_ui(element)
-            sensor:update_ui(element)
+            local status, err = pcall(sensor.create_ui, sensor, element)
+            if err then error({"err_specific", sensor.name, "create_ui", err}) end
+            status, err = pcall(sensor.update_ui, sensor, element)
+            if err then error({"err_specific", sensor.name, "update_ui", err}) end
         else
-            sensor:delete_ui(element)
+            local status, err = pcall(sensor.delete_ui, sensor, element)
+            if err then error({"err_specific", sensor.name, "delete_ui", err}) end
         end
     end
-end
-
-
-local octant_names = {
-    [0] = {"direction.east"},
-    [1] = {"direction.southeast"},
-    [2] = {"direction.south"},
-    [3] = {"direction.southwest"},
-    [4] = {"direction.west"},
-    [5] = {"direction.northwest"},
-    [6] = {"direction.north"},
-    [7] = {"direction.northeast"},
-}
-
-function evogui.get_octant_name(vector)
-    local radians = math.atan2(vector.y, vector.x)
-    local octant = math.floor( 8 * radians / (2*math.pi) + 8.5 ) % 8
-
-    return octant_names[octant]
 end
 
 
