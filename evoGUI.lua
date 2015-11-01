@@ -5,6 +5,7 @@ require "value_sensors.kill_count"
 require "value_sensors.play_time"
 require "value_sensors.player_locations"
 require "value_sensors.pollution_around_player"
+require "value_sensors.remote_sensor"
 require "settingsGUI"
 require "remote"
 

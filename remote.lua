@@ -31,11 +31,76 @@ local function remote_rebuild(player_name)
     global.evogui[player.name].version = ""
 end
 
+--
+-- Creates a sensor managed by a remote interface (another mod or script)
+-- sensor_name: internal name of the sensor. Should be unique.
+-- sensor_text: Text to display in the active gui
+-- sensor_caption: Sensor setting name in the EvoGUI settings panel
+-- sensor_color: Font color of the text to display in the active gui, optional, may be nil
+-- example: remote.call("EvoGUI", "create_remote_sensor", "mymod_my_sensor_name", "Text: Lorem Ipsum", "[My Mod] Lorem Ipsum Text")
+local function create_remote_sensor(sensor_name, sensor_text, sensor_caption, sensor_color)
+    if not sensor_name then
+        evogui.log({"err_nosensorname"})
+        return
+    end
+
+    if not sensor_text then
+        evogui.log({"err_nosensortext"})
+        return
+    end
+
+    if not sensor_caption then
+        evogui.log({"err_nosensorcaption"})
+        return
+    end
+
+    RemoteSensor.new(sensor_name, sensor_text, sensor_caption, sensor_color)
+end
+
+--
+-- Updates a sensor managed by a remote interface
+-- sensor_name: internal name of the sensor. The sensor should have been previously created.
+-- sensor_text: Text to display in the active gui
+-- sensor_color: Font color of the text to display in the active gui, optional, may be nil
+-- example: remote.call("EvoGUI", "update_remote_sensor", "mymod_my_sensor_name", "Text: Lorem Ipsum")
+local function update_remote_sensor(sensor_name, sensor_text, sensor_color)
+    if not sensor_name then
+        evogui.log({"err_nosensorname"})
+        return
+    end
+
+    if not sensor_text then
+        evogui.log({"err_nosensortext"})
+        return
+    end
+
+    local sensor = RemoteSensor.get_by_name(sensor_name)
+    if not sensor then
+        evogui.log({"err_nosensorfound"})
+        return
+    end
+
+    sensor["line"] = sensor_text
+    if sensor_color then
+        sensor["color"] = sensor_color
+    end
+end
+
 
 interface = {
     rebuild = function(player_name)
         local status, err = pcall(remote_rebuild, player_name)
         if err then evogui.log({"err_generic", "interface.rebuild", err}) end
+    end,
+
+    create_remote_sensor = function(sensor_name, sensor_text, sensor_caption, sensor_color)
+        local status, err = pcall(create_remote_sensor, sensor_name, sensor_text, sensor_caption, sensor_color)
+        if err then evogui.log({"err_generic", "remote.sensor", err}) end
+    end,
+
+    update_remote_sensor = function(sensor_name, sensor_text, sensor_color)
+        local status, err = pcall(update_remote_sensor, sensor_name, sensor_text, sensor_color)
+        if err then evogui.log({"err_generic", "remote.sensor", err}) end
     end
 }
 
