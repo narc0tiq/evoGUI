@@ -45,12 +45,12 @@ local function create_remote_sensor(sensor_name, sensor_text, sensor_caption, se
     end
 
     if not sensor_text then
-        evogui.log({"err_nosensortext"})
+        evogui.log({"err_nosensortext", sensor_name})
         return
     end
 
     if not sensor_caption then
-        evogui.log({"err_nosensorcaption"})
+        evogui.log({"err_nosensorcaption", sensor_name})
         return
     end
 
@@ -70,13 +70,13 @@ local function update_remote_sensor(sensor_name, sensor_text, sensor_color)
     end
 
     if not sensor_text then
-        evogui.log({"err_nosensortext"})
+        evogui.log({"err_nosensortext", sensor_name})
         return
     end
 
     local sensor = RemoteSensor.get_by_name(sensor_name)
     if not sensor then
-        evogui.log({"err_nosensorfound"})
+        evogui.log({"err_nosensorfound", sensor_name})
         return
     end
 
@@ -95,12 +95,12 @@ interface = {
 
     create_remote_sensor = function(sensor_name, sensor_text, sensor_caption, sensor_color)
         local status, err = pcall(create_remote_sensor, sensor_name, sensor_text, sensor_caption, sensor_color)
-        if err then evogui.log({"err_generic", "remote.sensor", err}) end
+        if err then evogui.log({"err_generic", "remote.create_remote_sensor", err}) end
     end,
 
     update_remote_sensor = function(sensor_name, sensor_text, sensor_color)
         local status, err = pcall(update_remote_sensor, sensor_name, sensor_text, sensor_color)
-        if err then evogui.log({"err_generic", "remote.sensor", err}) end
+        if err then evogui.log({"err_generic", "remote.update_remote_sensor", err}) end
     end
 }
 

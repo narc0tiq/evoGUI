@@ -1,11 +1,11 @@
 require "template"
 
 RemoteSensor = {}
-function RemoteSensor.new(name, line, caption, style)
+function RemoteSensor.new(name, line, caption, color)
     local sensor = ValueSensor.new("remote_sensor_" .. name)
     sensor["line"] = line
     sensor["display_name"] = caption
-    sensor["style"] = style
+    sensor["color"] = color
 
     function sensor:set_line(text)
         self.line = text
