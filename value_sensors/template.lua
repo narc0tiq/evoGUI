@@ -9,6 +9,7 @@ function ValueSensor.new(name)
         ["name"] = name,
         ["display_name"] = { "sensor."..name..".name" },
         ["format_key"] = "sensor."..name..".format",
+        ["color"] = { r = 255, g = 255, b = 255 },
     }
 
     function sensor:get_line()
@@ -28,6 +29,7 @@ function ValueSensor.new(name)
         self.settings = sensor_settings
 
         owner[self.name].caption = self:get_line()
+        owner[self.name].style.font_color = self.color
     end
 
     function sensor:delete_ui(owner)
