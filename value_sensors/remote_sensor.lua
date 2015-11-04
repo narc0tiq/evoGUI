@@ -31,7 +31,6 @@ function RemoteSensor.new(mod_name, name, line, caption, color)
         color = sensor.color
      }
     global.remote_sensors[name] = sensor_data
-    print("Added Global Remote Sensors: " .. serpent.dump(global.remote_sensors))
 end
 
 function RemoteSensor.get_by_name(name)
@@ -39,7 +38,6 @@ function RemoteSensor.get_by_name(name)
 end
 
 function RemoteSensor.initialize()
-    print("Initializing Global Remote Sensors: " .. serpent.dump(global.remote_sensors))
      -- Initialize any remote sensors that were previously saved
     if global.remote_sensors then
         print("Global Remote Sensors: " .. serpent.dump(global.remote_sensors))
