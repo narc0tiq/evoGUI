@@ -1,13 +1,13 @@
 require "template"
 
 RemoteSensor = {}
-function RemoteSensor.new(mod_name, name, line, caption, color)
-    local sensor = ValueSensor.new("remote_sensor_" .. name)
+function RemoteSensor.new(sensor_data)
+    local sensor = ValueSensor.new("remote_sensor_" .. sensor_data.name)
 
-    sensor["mod_name"] = mod_name
-    sensor["line"] = line
-    sensor["display_name"] = caption
-    sensor["color"] = color
+    sensor["mod_name"] = sensor_data.mod_name
+    sensor["line"] = sensor_data.text
+    sensor["display_name"] = "[" .. sensor_data.mod_name .. "]" .. sensor_data.caption
+    sensor["color"] = sensor_data.color
 
     function sensor:set_line(text)
         self.line = text
@@ -21,16 +21,9 @@ function RemoteSensor.new(mod_name, name, line, caption, color)
     if not global.remote_sensors then
         global.remote_sensors = {}
     end
-    
+
     -- store sensor data for global serialization
-    local sensor_data = {
-        mod_name = sensor.mod_name,
-        name = name,
-        line = sensor.line,
-        display_name = sensor.display_name,
-        color = sensor.color
-     }
-    global.remote_sensors[name] = sensor_data
+    global.remote_sensors[sensor_data.name] = sensor_data
 end
 
 function RemoteSensor.get_by_name(name)
@@ -40,10 +33,9 @@ end
 function RemoteSensor.initialize()
      -- Initialize any remote sensors that were previously saved
     if global.remote_sensors then
-        print("Global Remote Sensors: " .. serpent.dump(global.remote_sensors))
-        for _, sensor in pairs(global.remote_sensors) do
-            if not RemoteSensor.get_by_name(sensor.name) then
-                RemoteSensor.new(sensor.mod_name, sensor.name, sensor.line, sensor.display_name, sensor.color)
+        for _, sensor_data in pairs(global.remote_sensors) do
+            if not RemoteSensor.get_by_name(sensor_data.name) then
+                RemoteSensor.new(sensor_data)
             end
         end
     end

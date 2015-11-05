@@ -4,8 +4,12 @@ require "evoGUI"
 if not evogui then evogui = {} end
 
 function evogui.log(message)
-    for i, p in ipairs(game.players) do
-        p.print(message)
+    if game then
+        for i, p in ipairs(game.players) do
+            p.print(message)
+        end
+    else
+        error(serpent.dump(message, {compact = false, nocode = true, indent = ' '}))
     end
 end
 

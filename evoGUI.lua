@@ -38,21 +38,16 @@ end
 -- Iterate through all value_sensors, if any are associated with a mod_name that
 -- has been removed, remove the sensor from the list of value_sensors.
 function evogui.validate_sensors(mod_changes)
-    local valid_sensors = {}
-    for sensor in evogui.value_sensors do
+    for i = #evogui.value_sensors, 1, -1 do
+        local sensor = evogui.value_sensors[i]
         if sensor.mod_name and mod_changes[sensor.mod_name] then
-            -- mod upgrade, keep sensor
-            if mod_changes[sensor.mod_name].new_version ~= nil then
-                valid_sensors[#valid_sensors + 1] = sensor
-            else
-                -- mod removed, remove sensor from ui
+            -- mod removed, remove sensor from ui
+            if mod_changes[sensor.mod_name].new_version == nil then
                 evogui.hide_sensor(sensor)
+                table.remove(evogui.value_sensors, i)
             end
-        else
-            valid_sensors[#valid_sensors + 1] = sensor
         end
     end
-    evogui.value_sensors = valid_sensors
 end
 
 function evogui.hide_sensor(sensor)

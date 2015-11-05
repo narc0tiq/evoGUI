@@ -33,38 +33,33 @@ end
 
 --
 -- Creates a sensor managed by a remote interface (another mod or script)
--- mod_name: Name of the mod registering the sensor. Sensor will be removed if the mod is removed from the game.
--- sensor_name: internal name of the sensor. Should be unique.
--- sensor_text: Text to display in the active gui
--- sensor_caption: Sensor setting name in the EvoGUI settings panel
--- sensor_color: Font color of the text to display in the active gui, optional, may be nil
--- example: remote.call("EvoGUI", "create_remote_sensor", "mymod_my_sensor_name", "Text: Lorem Ipsum", "[My Mod] Lorem Ipsum Text")
-local function create_remote_sensor(mod_name, sensor_name, sensor_text, sensor_caption, sensor_color)
-    if not mod_name then
-        evogui.log({"err_nomodname"})
+-- sensor_data: a table with the following fields,
+--     mod_name: Name of the mod registering the sensor. Sensor will be removed if the mod is removed from the game.
+--     name: internal name of the sensor. Should be unique.
+--     text: Text to display in the active gui
+--     caption: Sensor setting name in the EvoGUI settings panel
+--     color: Font color of the text to display in the active gui, optional, may be nil
+--
+-- example: remote.call("EvoGUI", "create_remote_sensor", { "mod_name" = "my_mod",
+--                                                          "name" = "my_mod_my_sensor_name",
+--                                                          "text" = "Text: Lorem Ipsum",
+--                                                          "caption" = "[My Mod] Lorem Ipsum Text" })
+local function create_remote_sensor(sensor_data)
+    if not sensor_data then
+        evogui.log({"err_no_sensor_data"})
         return
     end
 
-    if not sensor_name then
-        evogui.log({"err_nosensorname"})
-        return
+    for _, field in pairs({ "mod_name", "name", "text", "caption" }) do
+        if not sensor_data[field] then
+            evogui.log({"err_sensor_missing_field", serpent.dump(sensor_data, {compact = false, nocode = true, indent = ' '}), field})
+            return
+        end
     end
 
-    if not sensor_text then
-        evogui.log({"err_nosensortext", sensor_name})
-        return
-    end
-
-    if not sensor_caption then
-        evogui.log({"err_nosensorcaption", sensor_name})
-        return
-    end
-    
-    local sensor = RemoteSensor.get_by_name(sensor_name)
+    local sensor = RemoteSensor.get_by_name(sensor_data.name)
     if not sensor then
-        RemoteSensor.new(mod_name, sensor_name, sensor_text, sensor_caption, sensor_color)
-    else
-        -- should anything happen here?
+        RemoteSensor.new(sensor_data)
     end
 end
 
@@ -104,8 +99,8 @@ interface = {
         if err then evogui.log({"err_generic", "interface.rebuild", err}) end
     end,
 
-    create_remote_sensor = function(mod_name, sensor_name, sensor_text, sensor_caption, sensor_color)
-        local status, err = pcall(create_remote_sensor, mod_name, sensor_name, sensor_text, sensor_caption, sensor_color)
+    create_remote_sensor = function(sensor_data)
+        local status, err = pcall(create_remote_sensor, sensor_data)
         if err then evogui.log({"err_generic", "remote.create_remote_sensor", err}) end
     end,
 
