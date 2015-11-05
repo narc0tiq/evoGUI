@@ -4,8 +4,12 @@ require "evoGUI"
 if not evogui then evogui = {} end
 
 function evogui.log(message)
-    for i, p in ipairs(game.players) do
-        p.print(message)
+    if game then
+        for i, p in ipairs(game.players) do
+            p.print(message)
+        end
+    else
+        error(serpent.dump(message, {compact = false, nocode = true, indent = ' '}))
     end
 end
 
@@ -37,13 +41,15 @@ end
 
 script.on_init(evogui.mod_init)
 script.on_configuration_changed(evogui.mod_update)
-
+script.on_load(function()
+    local status, err = pcall(RemoteSensor.initialize)
+    if err then evogui.log({"err_generic", "on_load", err}) end
+end)
 
 script.on_event(defines.events.on_player_created, function(event)
     local status, err = pcall(evogui.new_player, event)
     if err then evogui.log({"err_generic", "on_player_created", err}) end
 end)
-
 
 script.on_event(defines.events.on_tick, function(event)
     local status, err = pcall(evogui.update_gui, event)

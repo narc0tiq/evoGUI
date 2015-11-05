@@ -23,12 +23,44 @@ function evogui.mod_init()
     end
 end
 
-
 function evogui.mod_update(data)
-    if data.mod_changes["{{MOD_NAME}}"] then
-        -- TODO: If a more major migration ever needs doing, do that here.
-        -- Otherwise, just falling back to mod_init should work fine.
-        evogui.mod_init()
+    if data.mod_changes then
+        if data.mod_changes["{{MOD_NAME}}"] then
+            -- TODO: If a more major migration ever needs doing, do that here.
+            -- Otherwise, just falling back to mod_init should work fine.
+            evogui.mod_init()
+        end
+
+        evogui.validate_sensors(data.mod_changes)
+    end
+end
+
+-- Iterate through all value_sensors, if any are associated with a mod_name that
+-- has been removed, remove the sensor from the list of value_sensors.
+function evogui.validate_sensors(mod_changes)
+    for i = #evogui.value_sensors, 1, -1 do
+        local sensor = evogui.value_sensors[i]
+        if sensor.mod_name and mod_changes[sensor.mod_name] then
+            -- mod removed, remove sensor from ui
+            if mod_changes[sensor.mod_name].new_version == nil then
+                evogui.hide_sensor(sensor)
+                table.remove(evogui.value_sensors, i)
+            end
+        end
+    end
+end
+
+function evogui.hide_sensor(sensor)
+    for player_name, data in pairs(global.evogui) do
+        if data.always_visible then
+            data.always_visible[sensor["name"]] = false
+        end
+    end
+    for _, player in pairs(game.players) do
+        local player_settings = global.evogui[player.name]
+
+        local sensor_flow = player.gui.top.evoGUI.sensor_flow
+        evogui.update_av(player, sensor_flow.always_visible)
     end
 end
 
