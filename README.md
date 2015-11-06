@@ -6,6 +6,8 @@ time.
 ## Many thanks for ##
 
 * The Hebrew translation by JoCKeRiL
+* The Russian translation by Rikkilook
+* The Czech translation by theRustyKnife
 * The many downloads so far! Glad you guys are liking it.
 * Continuous Integration by CircleCI: [![Circle CI](https://circleci.com/gh/narc0tiq/evoGUI.svg?style=svg)](https://circleci.com/gh/narc0tiq/evoGUI)
 
