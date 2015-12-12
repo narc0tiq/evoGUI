@@ -76,8 +76,14 @@ end
 function evogui.update_gui(event)
     if (event.tick % global.settings.update_delay) ~= 0 then return end
 
-    for _, player in pairs(game.players) do
+    for player_index, player in pairs(game.players) do
         local player_settings = global.evogui[player.name]
+        -- saves converted from SP with no username to MP won't raise evogui.new_player
+        -- so we have to check here, as well.
+        if not player_settings then
+            evogui.new_player({player_index = player_index})
+            player_settings = global.evogui[player.name]
+        end
 
         local sensor_flow = player.gui.top.evoGUI.sensor_flow
         evogui.update_av(player, sensor_flow.always_visible)
