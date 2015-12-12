@@ -68,6 +68,10 @@ end
 function evogui.new_player(event)
     local player = game.get_player(event.player_index)
 
+    setup_player(player)
+end
+
+function evogui.setup_player(player)
     evogui.create_player_globals(player)
     evogui.create_sensor_display(player)
 end
@@ -78,6 +82,10 @@ function evogui.update_gui(event)
 
     for _, player in pairs(game.players) do
         local player_settings = global.evogui[player.name]
+        if not player_settings then
+            evogui.setup_player(player)
+            player_settings = global.evogui[player.name]
+        end
 
         local sensor_flow = player.gui.top.evoGUI.sensor_flow
         evogui.update_av(player, sensor_flow.always_visible)
