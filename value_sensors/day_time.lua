@@ -3,10 +3,16 @@ require "template"
 if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("day_time")
 
+if remote.interfaces.MoWeather then
+    -- assume MoWeather's getdaytime is sane
+    function get_day_time() return remote.call("MoWeather", "getdaytime") end
+else
+    -- 0.5 is midnight; let's make days *start* at midnight instead.
+    function get_day_time() return game.daytime + 0.5 end
+end
 
 function sensor:get_line()
-    -- 0.5 is midnight; let's make days *start* at midnight instead.
-    local day_time = math.fmod(game.daytime + 0.5, 1)
+    local day_time = math.fmod(get_day_time(), 1)
 
     local day_time_minutes = math.floor(day_time * 24 * 60)
     local day_time_hours = math.floor(day_time_minutes / 60)
