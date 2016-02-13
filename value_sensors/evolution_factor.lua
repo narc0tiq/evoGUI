@@ -4,11 +4,15 @@ local sensor = ValueSensor.new("evolution_factor")
 
 
 function sensor:get_line()
+    local percent_evo_factor = game.evolution_factor * 100
+    -- this nonsense is because string.format(%.4f) is not safe in MP across platforms, but integer math is
+    local whole_number = math.floor(percent_evo_factor)
+    local fractional_component = math.floor((percent_evo_factor - whole_number) * 10)
     if self.settings.extra_precision then
-        return {self.format_key, string.format("%0.4f%%", game.evolution_factor * 100)}
+        fractional_component = math.floor((percent_evo_factor - whole_number) * 10000)
     end
 
-    return {self.format_key, string.format("%0.1f%%", game.evolution_factor * 100)}
+    return {self.format_key, string.format("%d.%d%%", whole_number, fractional_component)}
 end
 
 
