@@ -1,6 +1,8 @@
 require "template"
 
 local sensor = ValueSensor.new("play_time")
+sensor.show_days = sensor:make_on_click_checkbox_handler("show_days")
+sensor.show_seconds = sensor:make_on_click_checkbox_handler("show_seconds")
 
 
 function sensor:get_line(player)
@@ -42,12 +44,10 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_sensor_play_time_checkbox_show_days",
              caption={"sensor.play_time.settings.show_days"},
              state=sensor_settings.show_days}
-    self.show_days = self:make_on_click_checkbox_handler("show_days")
 
     root.add{type="checkbox", name="evogui_sensor_play_time_checkbox_show_seconds",
              caption={"sensor.play_time.settings.show_seconds"},
              state=sensor_settings.show_seconds}
-    self.show_seconds = self:make_on_click_checkbox_handler("show_seconds")
 
     root.add{type="button", name="evogui_sensor_play_time_close", caption={"settings_close"}}
 end

@@ -10,6 +10,9 @@ else
     function get_day_time() return game.daytime + 0.5 end
 end
 
+sensor.show_day_number = sensor:make_on_click_checkbox_handler("show_day_number")
+sensor.minute_rounding = sensor:make_on_click_checkbox_handler("minute_rounding")
+
 function sensor:get_line(player)
     local day_time = math.fmod(get_day_time(), 1)
 
@@ -49,12 +52,10 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_sensor_day_time_checkbox_show_day_number",
              caption={"sensor.day_time.settings.show_day_number"},
              state=sensor_settings.show_day_number}
-    self.show_day_number = self:make_on_click_checkbox_handler("show_day_number")
 
     root.add{type="checkbox", name="evogui_sensor_day_time_checkbox_minute_rounding",
              caption={"sensor.day_time.settings.minute_rounding"},
              state=sensor_settings.minute_rounding}
-    self.minute_rounding = self:make_on_click_checkbox_handler("minute_rounding")
 
     root.add{type="button", name="evogui_sensor_day_time_btn_close", caption={"settings_close"}}
 end

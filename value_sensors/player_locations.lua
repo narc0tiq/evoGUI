@@ -2,6 +2,11 @@ require "template"
 
 if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("player_locations")
+sensor.show_player_index = sensor:make_on_click_checkbox_handler("show_player_index")
+sensor.show_position = sensor:make_on_click_checkbox_handler("show_position")
+sensor.show_surface = sensor:make_on_click_checkbox_handler("show_surface")
+sensor.show_direction = sensor:make_on_click_checkbox_handler("show_direction")
+sensor.show_offline = sensor:make_on_click_checkbox_handler("show_offline")
 
 
 function sensor:create_ui(owner)
@@ -29,27 +34,22 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_player_index",
              caption={"sensor.player_locations.settings.show_player_index"},
              state=sensor_settings.show_player_index}
-    self.show_player_index = self:make_on_click_checkbox_handler("show_player_index")
 
     root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_position",
              caption={"sensor.player_locations.settings.show_position"},
              state=sensor_settings.show_position}
-    self.show_position = self:make_on_click_checkbox_handler("show_position")
 
     root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_surface",
              caption={"sensor.player_locations.settings.show_surface"},
              state=sensor_settings.show_surface}
-    self.show_surface = self:make_on_click_checkbox_handler("show_surface")
 
     root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_direction",
              caption={"sensor.player_locations.settings.show_direction"},
              state=sensor_settings.show_direction}
-    self.show_direction = self:make_on_click_checkbox_handler("show_direction")
 
     root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_offline",
              caption={"sensor.player_locations.settings.show_offline"},
              state=sensor_settings.show_offline}
-    self.show_offline = self:make_on_click_checkbox_handler("show_offline")
 
     root.add{type="button", name="evogui_sensor_player_locations_close", caption={"settings_close"}}
 end
