@@ -116,12 +116,6 @@ function evogui.create_player_globals(player)
 
     if not player_settings.popup_open then player_settings.popup_open = false end
 
-    if not player_settings.personal_sensors then
-        player_settings.personal_sensors = {}
-
-        table.insert(player_settings.personal_sensors, PollutionSensor.new(player))
-    end
-
     if not player_settings.sensor_settings then
         player_settings.sensor_settings = {}
     end
@@ -224,7 +218,6 @@ function evogui.update_av(player, element)
     local always_visible = global.evogui[player.name].always_visible
 
     update_sensors(element, evogui.value_sensors, always_visible)
-    update_sensors(element, global.evogui[player.name].personal_sensors, always_visible)
 end
 
 
@@ -234,7 +227,6 @@ function evogui.update_ip(player, element)
     local in_popup = global.evogui[player.name].in_popup
 
     update_sensors(element, evogui.value_sensors, in_popup)
-    update_sensors(element, global.evogui[player.name].personal_sensors, in_popup)
 end
 
 

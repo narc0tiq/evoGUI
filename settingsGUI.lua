@@ -139,10 +139,6 @@ function evogui.on_click.evoGUI_settings(event)
         add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)
     end
 
-    for _, sensor in ipairs(player_data.personal_sensors) do
-        add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)
-    end
-
     local buttons = root.add{type="flow", name="buttons", direction="horizontal"}
     buttons.add{type="button", name="evoGUI_settings_close", caption={"settings_close"}}
 end

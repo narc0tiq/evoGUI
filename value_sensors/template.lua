@@ -12,7 +12,7 @@ function ValueSensor.new(name)
         ["color"] = { r = 255, g = 255, b = 255 },
     }
 
-    function sensor:get_line()
+    function sensor:get_line(player)
         return self.display_name
     end
 
@@ -28,7 +28,7 @@ function ValueSensor.new(name)
 
         self.settings = sensor_settings
 
-        owner[self.name].caption = self:get_line()
+        owner[self.name].caption = self:get_line(player)
         owner[self.name].style.font_color = self.color
     end
 
