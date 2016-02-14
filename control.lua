@@ -19,6 +19,10 @@ function evogui.format_number(n) -- credit http://richard.warburton.it
     return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 end
 
+function string.starts_with(haystack, needle)
+    return string.sub(haystack, 1, string.len(needle)) == needle
+end
+
 
 local octant_names = {
     [0] = {"direction.east"},
@@ -57,14 +61,13 @@ script.on_event(defines.events.on_tick, function(event)
 end)
 
 script.on_event(defines.events.on_gui_click, function(event)
-    if evogui.on_click[event.element.name] ~= nil then
-        local status, err = pcall(evogui.on_click[event.element.name], event)
-        if err then
-            if event.element.valid then
-                evogui.log({"err_specific", "on_gui_click", event.element.name, err})
-            else
-                evogui.log({"err_generic", "on_gui_click", err})
-            end
+    local status, err = pcall(evogui.on_gui_click, event)
+
+    if err then
+        if event.element.valid then
+            evogui.log({"err_specific", "on_gui_click", event.element.name, err})
+        else
+            evogui.log({"err_generic", "on_gui_click", err})
         end
     end
 end)

@@ -10,8 +10,6 @@ require "settingsGUI"
 require "remote"
 
 if not evogui then evogui = {} end
-if not evogui.on_click then evogui.on_click = {} end
-
 
 function evogui.mod_init()
     if not global.settings then global.settings = {} end
@@ -32,6 +30,22 @@ function evogui.mod_update(data)
         end
 
         evogui.validate_sensors(data.mod_changes)
+    end
+end
+
+function evogui.on_gui_click(event)
+    if string.starts_with(event.element.name, "evogui_settings_gui_") then
+        evogui.on_settings_click(event)
+    elseif event.element.name == "evoGUI_toggle_popup" then
+        evogui.evoGUI_toggle_popup(event)
+    elseif string.starts_with(event.element.name, "evogui_sensor_") then
+        for _, sensor in pairs(evogui.value_sensors) do
+            -- if the gui element name matches 'evogui_sensor_' + sensor_name, send it the on_click event.
+            if string.starts_with(event.element.name, "evogui_sensor_" .. sensor.name) then
+                sensor:on_click(event)
+                break
+            end
+        end
     end
 end
 
@@ -180,7 +194,7 @@ function evogui.create_sensor_display(player)
             action_buttons.evoGUI_toggle_popup.style = "EvoGUI_expando_open"
         end
         action_buttons.add{type="button",
-                           name="evoGUI_settings",
+                           name="evogui_settings_gui_settings_open",
                            style="EvoGUI_settings"}
 
         local sensor_flow = root.add{type="flow",
@@ -230,7 +244,7 @@ function evogui.update_ip(player, element)
 end
 
 
-function evogui.on_click.evoGUI_toggle_popup(event)
+function evogui.evoGUI_toggle_popup(event)
     local player = game.get_player(event.player_index)
     local player_settings = global.evogui[player.name]
 

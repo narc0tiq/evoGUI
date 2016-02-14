@@ -42,6 +42,16 @@ function ValueSensor.new(name)
         return self.name.."_settings"
     end
 
+    function sensor:on_click(event)
+        if string.starts_with(event.element.name, "evogui_sensor_" .. self.name .. "_checkbox_") then
+            local len = string.len("evogui_sensor_" .. self.name .. "_checkbox_")
+            local function_name = event.element.name:sub(len + 1,-1)
+            self[function_name](event)
+        else
+            self:close_settings_gui(event.player_index)
+        end
+    end
+
     function sensor:close_settings_gui(player_index)
         local player = game.get_player(player_index)
         local root_name = self:settings_root_name()

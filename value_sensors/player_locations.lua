@@ -26,35 +26,33 @@ function sensor:settings_gui(player_index)
                                        name=root_name,
                                        direction="vertical",
                                        caption={"sensor.player_locations.settings.title"}}
-    root.add{type="checkbox", name="evogui_show_player_index",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_player_index",
              caption={"sensor.player_locations.settings.show_player_index"},
              state=sensor_settings.show_player_index}
-    evogui.on_click.evogui_show_player_index = self:make_on_click_checkbox_handler("show_player_index")
+    self.show_player_index = self:make_on_click_checkbox_handler("show_player_index")
 
-    root.add{type="checkbox", name="evogui_show_position",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_position",
              caption={"sensor.player_locations.settings.show_position"},
              state=sensor_settings.show_position}
-    evogui.on_click.evogui_show_position = self:make_on_click_checkbox_handler("show_position")
+    self.show_position = self:make_on_click_checkbox_handler("show_position")
 
-    root.add{type="checkbox", name="evogui_show_surface",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_surface",
              caption={"sensor.player_locations.settings.show_surface"},
              state=sensor_settings.show_surface}
-    evogui.on_click.evogui_show_surface = self:make_on_click_checkbox_handler("show_surface")
+    self.show_surface = self:make_on_click_checkbox_handler("show_surface")
 
-    root.add{type="checkbox", name="evogui_show_direction",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_direction",
              caption={"sensor.player_locations.settings.show_direction"},
              state=sensor_settings.show_direction}
-    evogui.on_click.evogui_show_direction = self:make_on_click_checkbox_handler("show_direction")
+    self.show_direction = self:make_on_click_checkbox_handler("show_direction")
 
-    root.add{type="checkbox", name="evogui_show_offline",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_offline",
              caption={"sensor.player_locations.settings.show_offline"},
              state=sensor_settings.show_offline}
-    evogui.on_click.evogui_show_offline = self:make_on_click_checkbox_handler("show_offline")
+    self.show_offline = self:make_on_click_checkbox_handler("show_offline")
 
-    local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
-    evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
+    root.add{type="button", name="evogui_sensor_player_locations_close", caption={"settings_close"}}
 end
-
 
 local function directions(source, destination)
     -- Directions to or from positionless things? Hrm.

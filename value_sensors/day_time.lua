@@ -1,6 +1,5 @@
 require "template"
 
-if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("day_time")
 
 if remote.interfaces.MoWeather then
@@ -47,19 +46,17 @@ function sensor:settings_gui(player_index)
                                        name=root_name,
                                        direction="vertical",
                                        caption={"sensor.day_time.settings.title"}}
-    root.add{type="checkbox", name="evogui_show_day_number",
+    root.add{type="checkbox", name="evogui_sensor_day_time_checkbox_show_day_number",
              caption={"sensor.day_time.settings.show_day_number"},
              state=sensor_settings.show_day_number}
-    evogui.on_click.evogui_show_day_number = self:make_on_click_checkbox_handler("show_day_number")
+    self.show_day_number = self:make_on_click_checkbox_handler("show_day_number")
 
-    root.add{type="checkbox", name="evogui_minute_rounding",
+    root.add{type="checkbox", name="evogui_sensor_day_time_checkbox_minute_rounding",
              caption={"sensor.day_time.settings.minute_rounding"},
              state=sensor_settings.minute_rounding}
-    evogui.on_click.evogui_minute_rounding = self:make_on_click_checkbox_handler("minute_rounding")
+    self.minute_rounding = self:make_on_click_checkbox_handler("minute_rounding")
 
-    local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
-    evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
+    root.add{type="button", name="evogui_sensor_day_time_btn_close", caption={"settings_close"}}
 end
-
 
 ValueSensor.register(sensor)
