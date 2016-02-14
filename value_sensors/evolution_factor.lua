@@ -1,7 +1,7 @@
 require "template"
 
 local sensor = ValueSensor.new("evolution_factor")
-
+sensor.extra_precision = sensor:make_on_click_checkbox_handler("extra_precision")
 
 function sensor:get_line(player)
     local percent_evo_factor = game.evolution_factor * 100
@@ -28,7 +28,6 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_sensor_evolution_factor_checkbox_extra_precision",
              caption={"sensor.evolution_factor.settings.extra_precision"},
              state=sensor_settings.extra_precision}
-    self.extra_precision = self:make_on_click_checkbox_handler("extra_precision")
 
     root.add{type="button", name="evogui_sensor_evolution_factor_close", caption={"settings_close"}}
 end
