@@ -3,7 +3,7 @@ require "template"
 local sensor = ValueSensor.new("play_time")
 
 
-function sensor:get_line()
+function sensor:get_line(player)
     local play_time_seconds = math.floor(game.tick/60)
     local play_time_minutes = math.floor(play_time_seconds/60)
     local play_time_hours = math.floor(play_time_minutes/60)

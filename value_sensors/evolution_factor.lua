@@ -3,7 +3,7 @@ require "template"
 local sensor = ValueSensor.new("evolution_factor")
 
 
-function sensor:get_line()
+function sensor:get_line(player)
     local percent_evo_factor = game.evolution_factor * 100
     -- this nonsense is because string.format(%.4f) is not safe in MP across platforms, but integer math is
     local whole_number = math.floor(percent_evo_factor)

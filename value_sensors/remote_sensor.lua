@@ -13,7 +13,7 @@ function RemoteSensor.new(sensor_data)
         self.line = text
     end
 
-    function sensor:get_line()
+    function sensor:get_line(player)
         return self.line
     end
 
