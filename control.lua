@@ -19,6 +19,10 @@ function evogui.format_number(n) -- credit http://richard.warburton.it
     return left..(num:reverse():gsub('(%d%d%d)','%1,'):reverse())..right
 end
 
+function string.starts_with(haystack, needle)
+    return string.sub(haystack, 1, string.len(needle)) == needle
+end
+
 
 local octant_names = {
     [0] = {"direction.east"},
@@ -56,15 +60,28 @@ script.on_event(defines.events.on_tick, function(event)
     if err then evogui.log({"err_generic", "on_tick", err}) end
 end)
 
-script.on_event(defines.events.on_gui_click, function(event)
-    if evogui.on_click[event.element.name] ~= nil then
-        local status, err = pcall(evogui.on_click[event.element.name], event)
-        if err then
-            if event.element.valid then
-                evogui.log({"err_specific", "on_gui_click", event.element.name, err})
-            else
-                evogui.log({"err_generic", "on_gui_click", err})
+script.on_event(defines.events.on_gui_click, function(event)        
+    local status, err = pcall(function(event)
+        if string.starts_with(event.element.name, "evogui_settings_gui_") then
+            evogui.on_settings_click(event)
+        elseif event.element.name == "evoGUI_toggle_popup" then
+            evogui.evoGUI_toggle_popup(event)
+        elseif string.starts_with(event.element.name, "evogui_sensor_") then
+            for _, sensor in pairs(evogui.value_sensors) do
+                -- if the gui element name matches 'evogui_sensor_' + sensor_name, send it the on_click event.
+                if string.starts_with(event.element.name, "evogui_sensor_" .. sensor.name) then
+                    sensor:on_click(event)
+                    break
+                end
             end
+        end
+    end, event)
+    
+    if err then
+        if event.element.valid then
+            evogui.log({"err_specific", "on_gui_click", event.element.name, err})
+        else
+            evogui.log({"err_generic", "on_gui_click", err})
         end
     end
 end)
