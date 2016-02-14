@@ -11,7 +11,7 @@ else
     function get_day_time() return game.daytime + 0.5 end
 end
 
-function sensor:get_line()
+function sensor:get_line(player)
     local day_time = math.fmod(get_day_time(), 1)
 
     local day_time_minutes = math.floor(day_time * 24 * 60)
