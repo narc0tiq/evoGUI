@@ -75,24 +75,30 @@ function sensor:update_ui(owner)
     local gui_list = owner[self.name].player_list
 
     for _, p in ipairs(game.players) do
-        if not p.name or p.name == '' then
-            if gui_list.error == nil then
-                gui_list.add{type="label", name="error", caption={"sensor.player_locations.err_no_name"}}
+        local player_name = p.name
+        if not player_name or player_name == '' then
+            -- fallback to "Local Player" if this is singleplayer
+            if #game.players == 1 then
+                player_name = "sensor.player_locations.local_player"
+            else
+                if gui_list.error == nil then
+                    gui_list.add{type="label", name="error", caption={"sensor.player_locations.err_no_name"}}
+                end
+                break
             end
-            break
         end
 
         if gui_list.error ~= nil then gui_list.error.destroy() end
 
         if p.connected == false and not sensor_settings.show_offline then
-            if gui_list[p.name] and gui_list[p.name].valid then
-                gui_list[p.name].destroy()
+            if gui_list[player_name] and gui_list[player_name].valid then
+                gui_list[player_name].destroy()
             end
             goto next_player
         end
 
-        if gui_list[p.name] == nil then
-            gui_list.add{type="label", name=p.name}
+        if gui_list[player_name] == nil then
+            gui_list.add{type="label", name=player_name}
         end
 
         local direction = '?'
@@ -108,7 +114,11 @@ function sensor:update_ui(owner)
             table.insert(desc, string.format('(%d) ', p.index))
         end
 
-        table.insert(desc, p.name)
+        if player_name == "sensor.player_locations.local_player" then
+            table.insert(desc, {player_name})
+        else
+            table.insert(desc, player_name)
+        end
 
         if p.connected == false then
             table.insert(desc, ' ')
@@ -134,7 +144,7 @@ function sensor:update_ui(owner)
             table.insert(desc, direction)
         end
 
-        gui_list[p.name].caption = desc
+        gui_list[player_name].caption = desc
         ::next_player::
     end
 end
