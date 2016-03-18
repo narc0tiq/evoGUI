@@ -10,6 +10,7 @@ function sensor:get_line(player)
     local fractional_component = math.floor((percent_evo_factor - whole_number) * 10)
     if self.settings.extra_precision then
         fractional_component = math.floor((percent_evo_factor - whole_number) * 10000)
+        return {self.format_key, string.format("%d.%04d%%", whole_number, fractional_component)}
     end
 
     return {self.format_key, string.format("%d.%d%%", whole_number, fractional_component)}
