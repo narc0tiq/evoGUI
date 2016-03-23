@@ -5,12 +5,12 @@ time.
 
 ## Many thanks for ##
 
-* The Hebrew translation by JoCKeRiL
-* The Russian translation by Rikkilook
-* The Czech translation by theRustyKnife
 * The many downloads so far! Glad you guys are liking it.
 * Continuous Integration by CircleCI: [![Circle CI](https://circleci.com/gh/narc0tiq/evoGUI.svg?style=svg)](https://circleci.com/gh/narc0tiq/evoGUI)
 * Many, many improvements made by @Afforess! Thanks so much, you're the best!
+* The wonderful translations contributed by these awesome people: JoCKeRiL
+    (Hebrew), Rikkilook (Russian), theRustyKnife (Czech), thomaskneisel (German),
+    diilmac (Polish).
 
 
 ## License ##
