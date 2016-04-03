@@ -9,9 +9,10 @@ function ValueSensor.new(name)
         ["name"] = name,
         ["display_name"] = { "sensor."..name..".name" },
         ["format_key"] = "sensor."..name..".format",
+        ["color"] = { r = 255, g = 255, b = 255 },
     }
 
-    function sensor:get_line()
+    function sensor:get_line(player)
         return self.display_name
     end
 
@@ -27,7 +28,8 @@ function ValueSensor.new(name)
 
         self.settings = sensor_settings
 
-        owner[self.name].caption = self:get_line()
+        owner[self.name].caption = self:get_line(player)
+        owner[self.name].style.font_color = self.color
     end
 
     function sensor:delete_ui(owner)
@@ -38,6 +40,16 @@ function ValueSensor.new(name)
 
     function sensor:settings_root_name()
         return self.name.."_settings"
+    end
+
+    function sensor:on_click(event)
+        if string.starts_with(event.element.name, "evogui_sensor_" .. self.name .. "_checkbox_") then
+            local len = string.len("evogui_sensor_" .. self.name .. "_checkbox_")
+            local function_name = event.element.name:sub(len + 1,-1)
+            self[function_name](event)
+        else
+            self:close_settings_gui(event.player_index)
+        end
     end
 
     function sensor:close_settings_gui(player_index)

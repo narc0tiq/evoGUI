@@ -2,6 +2,11 @@ require "template"
 
 if not evogui.on_click then evogui.on_click = {} end
 local sensor = ValueSensor.new("player_locations")
+sensor.show_player_index = sensor:make_on_click_checkbox_handler("show_player_index")
+sensor.show_position = sensor:make_on_click_checkbox_handler("show_position")
+sensor.show_surface = sensor:make_on_click_checkbox_handler("show_surface")
+sensor.show_direction = sensor:make_on_click_checkbox_handler("show_direction")
+sensor.show_offline = sensor:make_on_click_checkbox_handler("show_offline")
 
 
 function sensor:create_ui(owner)
@@ -26,35 +31,28 @@ function sensor:settings_gui(player_index)
                                        name=root_name,
                                        direction="vertical",
                                        caption={"sensor.player_locations.settings.title"}}
-    root.add{type="checkbox", name="evogui_show_player_index",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_player_index",
              caption={"sensor.player_locations.settings.show_player_index"},
              state=sensor_settings.show_player_index}
-    evogui.on_click.evogui_show_player_index = self:make_on_click_checkbox_handler("show_player_index")
 
-    root.add{type="checkbox", name="evogui_show_position",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_position",
              caption={"sensor.player_locations.settings.show_position"},
              state=sensor_settings.show_position}
-    evogui.on_click.evogui_show_position = self:make_on_click_checkbox_handler("show_position")
 
-    root.add{type="checkbox", name="evogui_show_surface",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_surface",
              caption={"sensor.player_locations.settings.show_surface"},
              state=sensor_settings.show_surface}
-    evogui.on_click.evogui_show_surface = self:make_on_click_checkbox_handler("show_surface")
 
-    root.add{type="checkbox", name="evogui_show_direction",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_direction",
              caption={"sensor.player_locations.settings.show_direction"},
              state=sensor_settings.show_direction}
-    evogui.on_click.evogui_show_direction = self:make_on_click_checkbox_handler("show_direction")
 
-    root.add{type="checkbox", name="evogui_show_offline",
+    root.add{type="checkbox", name="evogui_sensor_player_locations_checkbox_show_offline",
              caption={"sensor.player_locations.settings.show_offline"},
              state=sensor_settings.show_offline}
-    evogui.on_click.evogui_show_offline = self:make_on_click_checkbox_handler("show_offline")
 
-    local btn_close = root.add{type="button", name="evogui_custom_sensor_close", caption={"settings_close"}}
-    evogui.on_click[btn_close.name] = function(event) self:close_settings_gui(player_index) end
+    root.add{type="button", name="evogui_sensor_player_locations_close", caption={"settings_close"}}
 end
-
 
 local function directions(source, destination)
     -- Directions to or from positionless things? Hrm.
@@ -75,24 +73,30 @@ function sensor:update_ui(owner)
     local gui_list = owner[self.name].player_list
 
     for _, p in ipairs(game.players) do
-        if not p.name or p.name == '' then
-            if gui_list.error == nil then
-                gui_list.add{type="label", name="error", caption={"sensor.player_locations.err_no_name"}}
+        local player_name = p.name
+        if not player_name or player_name == '' then
+            -- fallback to "Local Player" if this is singleplayer
+            if #game.players == 1 then
+                player_name = "sensor.player_locations.local_player"
+            else
+                if gui_list.error == nil then
+                    gui_list.add{type="label", name="error", caption={"sensor.player_locations.err_no_name"}}
+                end
+                break
             end
-            break
         end
 
         if gui_list.error ~= nil then gui_list.error.destroy() end
 
         if p.connected == false and not sensor_settings.show_offline then
-            if gui_list[p.name] and gui_list[p.name].valid then
-                gui_list[p.name].destroy()
+            if gui_list[player_name] and gui_list[player_name].valid then
+                gui_list[player_name].destroy()
             end
             goto next_player
         end
 
-        if gui_list[p.name] == nil then
-            gui_list.add{type="label", name=p.name}
+        if gui_list[player_name] == nil then
+            gui_list.add{type="label", name=player_name}
         end
 
         local direction = '?'
@@ -108,7 +112,11 @@ function sensor:update_ui(owner)
             table.insert(desc, string.format('(%d) ', p.index))
         end
 
-        table.insert(desc, p.name)
+        if player_name == "sensor.player_locations.local_player" then
+            table.insert(desc, {player_name})
+        else
+            table.insert(desc, player_name)
+        end
 
         if p.connected == false then
             table.insert(desc, ' ')
@@ -134,7 +142,7 @@ function sensor:update_ui(owner)
             table.insert(desc, direction)
         end
 
-        gui_list[p.name].caption = desc
+        gui_list[player_name].caption = desc
         ::next_player::
     end
 end
