@@ -34,21 +34,23 @@ end
 --
 -- Creates a sensor managed by a remote interface (another mod or script)
 -- sensor_data: a table with the following fields,
---     mod_name: Name of the mod registering the sensor. Sensor will be removed if the mod is removed from the game.
---     name: internal name of the sensor. Should be unique.
---     text: Text to display in the active gui (may be localized)
---     caption: Sensor setting name in the EvoGUI settings panel (may be localized)
---     color: Font color of the text to display in the active gui, optional, may be nil
+--     mod_name: Name of the mod registering the sensor. Sensor will be removed
+--         if the mod is removed from the game.
+--     name: Internal name of the sensor. Should be unique (otherwise you're
+--         just redefining the existing one).
+--     text: Text to display in the active gui (may be localized).
+--     caption: Sensor setting name in the EvoGUI settings panel (may be localized).
+--     color: Font color of the text to display in the active gui, optional, may be nil.
 --
--- example: remote.call("EvoGUI", "create_remote_sensor", { "mod_name" = "my_mod",
---                                                          "name" = "my_mod_my_sensor_name",
---                                                          "text" = "Text: Lorem Ipsum",
---                                                          "caption" = "Lorem Ipsum Text" })
+-- example: remote.call("EvoGUI", "create_remote_sensor", { mod_name = "my_mod",
+--                                                          name = "my_mod_my_sensor_name",
+--                                                          text = "Text: Lorem Ipsum",
+--                                                          caption = "Lorem Ipsum Text" })
 -- or, with locale:
--- remote.call("EvoGUI", "create_remote_sensor", { "mod_name" = "my_mod",
---                                                 "name" = "my_mod_my_sensor_name",
---                                                 "text" = {"my_mod_sensor_display", 42},
---                                                 "caption" = {"my_mod_sensor"} })
+-- remote.call("EvoGUI", "create_remote_sensor", { mod_name = "my_mod",
+--                                                 name = "my_mod_my_sensor_name",
+--                                                 text = {"my_mod_sensor_display", 42},
+--                                                 caption = {"my_mod_sensor"} })
 local function create_remote_sensor(sensor_data)
     if not sensor_data then
         evogui.log({"err_no_sensor_data"})
