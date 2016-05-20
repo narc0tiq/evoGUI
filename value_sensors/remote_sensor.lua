@@ -6,7 +6,7 @@ function RemoteSensor.new(sensor_data)
 
     sensor["mod_name"] = sensor_data.mod_name
     sensor["line"] = sensor_data.text
-    sensor["display_name"] = {"", "[", sensor_data.mod_name, "] ", sensor_data.caption}
+    sensor["display_name"] = {"sensor.remote.settings_title_format", sensor_data.mod_name, sensor_data.caption}
     sensor["color"] = sensor_data.color
 
     function sensor:set_line(text)
