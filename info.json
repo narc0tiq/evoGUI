@@ -6,5 +6,6 @@
   "contact": "factorio-mods@narc.ro",
   "homepage": "https://github.com/narc0tiq/evoGUI/",
   "description": "Places an indicator on your UI telling you the current biter evolution factor (as a percentage). It also tells you how long you've been playing.",
-  "dependencies": ["base >= 0.12.11", "? moweather"]
+  "factorio_version": "0.13",
+  "dependencies": ["base >= 0.13.0", "? moweather"]
 }
