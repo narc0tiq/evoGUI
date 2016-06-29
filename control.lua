@@ -1,4 +1,3 @@
-require "defines"
 require "evoGUI"
 
 if not evogui then evogui = {} end

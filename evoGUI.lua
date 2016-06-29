@@ -1,4 +1,3 @@
-require "defines"
 require "value_sensors.day_time"
 require "value_sensors.evolution_factor"
 require "value_sensors.kill_count"
