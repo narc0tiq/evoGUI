@@ -50,7 +50,7 @@ end
 local sensor = ValueSensor.new("kill_count")
 
 function sensor:update_ui(owner)
-    local player = game.get_player(owner.player_index)
+    local player = game.players[owner.player_index]
 
     local biter_count = 0
     local spawner_count = 0

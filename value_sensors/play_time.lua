@@ -33,7 +33,7 @@ end
 
 
 function sensor:settings_gui(player_index)
-    local player = game.get_player(player_index)
+    local player = game.players[player_index]
     local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
     local root_name = self:settings_root_name()
 

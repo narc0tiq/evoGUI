@@ -1,5 +1,3 @@
-require "defines"
-
 if not evogui then evogui = {} end
 
 if not global.evogui then global.evogui = {} end
@@ -7,7 +5,7 @@ if not global.settings then global.settings = {} end
 
 
 local function toggle_always_visible(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
 
     local always_visible = global.evogui[player.name].always_visible
     local sensor_name = event.element.name:sub(24,-1)
@@ -20,7 +18,7 @@ end
 
 
 local function toggle_in_popup(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
 
     local in_popup = global.evogui[player.name].in_popup
     local sensor_name = event.element.name:sub(24,-1)
@@ -37,7 +35,7 @@ local function on_sensor_settings_closed(player_index)
 end
 
 local function trigger_settings_gui(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
 
     local sensor_name = event.element.name:sub(42,-1)
     local sensor = ValueSensor.get_by_name(sensor_name)
@@ -94,7 +92,7 @@ end
 
 
 function evogui.evoGUI_settings(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
     if player.gui.center.evoGUI_settingsGUI ~= nil then
         player.gui.center.evoGUI_settingsGUI.destroy()
         return
@@ -138,7 +136,7 @@ end
 
 
 function evogui.evoGUI_settings_close(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
 
     local new_update_freq = tonumber(player.gui.center.evoGUI_settingsGUI.core_settings.update_freq_flow.textfield.text)
     if new_update_freq ~= nil then

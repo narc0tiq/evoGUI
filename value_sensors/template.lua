@@ -23,7 +23,7 @@ function ValueSensor.new(name)
     end
 
     function sensor:update_ui(owner)
-        local player = game.get_player(owner.player_index)
+        local player = game.players[owner.player_index]
         local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
 
         self.settings = sensor_settings
@@ -53,7 +53,7 @@ function ValueSensor.new(name)
     end
 
     function sensor:close_settings_gui(player_index)
-        local player = game.get_player(player_index)
+        local player = game.players[player_index]
         local root_name = self:settings_root_name()
 
         player.gui.center[root_name].destroy()
@@ -65,7 +65,7 @@ function ValueSensor.new(name)
         local sensor_name = self.name
 
         return function(event)
-            local player = game.get_player(event.player_index)
+            local player = game.players[event.player_index]
             local sensor_settings = global.evogui[player.name].sensor_settings[sensor_name]
 
             sensor_settings[setting_name] = event.element.state
