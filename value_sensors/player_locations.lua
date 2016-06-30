@@ -23,7 +23,7 @@ end
 
 
 function sensor:settings_gui(player_index)
-    local player = game.get_player(player_index)
+    local player = game.players[player_index]
     local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
     local root_name = self:settings_root_name()
 
@@ -68,11 +68,11 @@ end
 
 
 function sensor:update_ui(owner)
-    local player = game.get_player(owner.player_index)
+    local player = game.players[owner.player_index]
     local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
     local gui_list = owner[self.name].player_list
 
-    for _, p in ipairs(game.players) do
+    for _, p in pairs(game.players) do
         local player_name = p.name
         if not player_name or player_name == '' then
             -- fallback to "Local Player" if this is singleplayer
@@ -100,7 +100,7 @@ function sensor:update_ui(owner)
         end
 
         local direction = '?'
-        local current_player = game.get_player(owner.player_index)
+        local current_player = game.players[owner.player_index]
         if p == current_player then
             direction = ''
         elseif current_player then

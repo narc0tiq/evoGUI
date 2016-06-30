@@ -1,11 +1,10 @@
-require "defines"
 require "evoGUI"
 
 if not evogui then evogui = {} end
 
 function evogui.log(message)
     if game then
-        for i, p in ipairs(game.players) do
+        for i, p in pairs(game.players) do
             p.print(message)
         end
     else

@@ -1,4 +1,3 @@
-require "defines"
 require "value_sensors.day_time"
 require "value_sensors.evolution_factor"
 require "value_sensors.kill_count"
@@ -80,7 +79,7 @@ end
 
 
 function evogui.new_player(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
 
     evogui.create_player_globals(player)
     evogui.create_sensor_display(player)
@@ -245,7 +244,7 @@ end
 
 
 function evogui.evoGUI_toggle_popup(event)
-    local player = game.get_player(event.player_index)
+    local player = game.players[event.player_index]
     local player_settings = global.evogui[player.name]
 
     local root = player.gui.top.evoGUI
