@@ -1,11 +1,11 @@
 {
   "name": "{{MOD_NAME}}",
   "version": "{{VERSION}}",
-  "title": "Evolution Factor Indicator",
+  "title": "EvoGUI - Evolution Factor Indicator and more",
   "author": "Octav \"narc\" Sandulescu",
   "contact": "factorio-mods@narc.ro",
   "homepage": "https://github.com/narc0tiq/evoGUI/",
-  "description": "Places an indicator on your UI telling you the current biter evolution factor (as a percentage). It also tells you how long you've been playing.",
+  "description": "Places some indicators on your UI for various little statistics that are nice to have.",
   "dependencies": ["base >= 0.13.0", "? moweather"],
   "factorio_version": "0.13"
 }
