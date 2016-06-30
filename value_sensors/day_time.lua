@@ -4,17 +4,17 @@ local sensor = ValueSensor.new("day_time")
 
 if remote.interfaces.MoWeather then
     -- assume MoWeather's getdaytime is sane
-    function get_day_time() return remote.call("MoWeather", "getdaytime") end
+    function get_day_time(player) return remote.call("MoWeather", "getdaytime") end
 else
     -- 0.5 is midnight; let's make days *start* at midnight instead.
-    function get_day_time() return game.daytime + 0.5 end
+    function get_day_time(player) return player.surface.daytime + 0.5 end
 end
 
 sensor.show_day_number = sensor:make_on_click_checkbox_handler("show_day_number")
 sensor.minute_rounding = sensor:make_on_click_checkbox_handler("minute_rounding")
 
 function sensor:get_line(player)
-    local day_time = math.fmod(get_day_time(), 1)
+    local day_time = math.fmod(get_day_time(player), 1)
 
     local day_time_minutes = math.floor(day_time * 24 * 60)
     local day_time_hours = math.floor(day_time_minutes / 60)
@@ -24,7 +24,7 @@ function sensor:get_line(player)
         display_minutes = day_time_minutes - (day_time_minutes % 15)
     end
 
-    local brightness = math.floor((1 - game.darkness) * 100)
+    local brightness = math.floor((1 - player.surface.darkness) * 100)
 
     if self.settings.show_day_number then
         local day_number = 1 + ((game.tick + 12500) / 25000)
