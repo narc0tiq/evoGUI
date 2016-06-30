@@ -72,7 +72,7 @@ function sensor:update_ui(owner)
     local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
     local gui_list = owner[self.name].player_list
 
-    for _, p in ipairs(game.players) do
+    for _, p in pairs(game.players) do
         local player_name = p.name
         if not player_name or player_name == '' then
             -- fallback to "Local Player" if this is singleplayer
