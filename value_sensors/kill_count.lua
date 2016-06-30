@@ -55,7 +55,7 @@ function sensor:update_ui(owner)
     local biter_count = 0
     local spawner_count = 0
     local other_count = 0
-    for entity_name, kill_count in pairs(player.force.kill_counts) do
+    for entity_name, kill_count in pairs(player.force.kill_count_statistics.input_counts) do
         if is_biter(entity_name) then
             biter_count = biter_count + kill_count
         elseif is_spawner(entity_name) then
