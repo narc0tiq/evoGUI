@@ -30,7 +30,11 @@ function RemoteSensor.get_by_name(name)
     return ValueSensor.get_by_name("remote_sensor_" .. name)
 end
 
+local remote_initialized = false
+
 function RemoteSensor.initialize()
+    if remote_initialized then return end
+
      -- Initialize any remote sensors that were previously saved
     if global.remote_sensors then
         for _, sensor_data in pairs(global.remote_sensors) do
@@ -39,6 +43,8 @@ function RemoteSensor.initialize()
             end
         end
     end
+
+    remote_initialized = true
 end
 
 return RemoteSensor

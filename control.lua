@@ -44,10 +44,6 @@ end
 
 script.on_init(evogui.mod_init)
 script.on_configuration_changed(evogui.mod_update)
-script.on_load(function()
-    local status, err = pcall(RemoteSensor.initialize)
-    if err then evogui.log({"err_generic", "on_load", err}) end
-end)
 
 script.on_event(defines.events.on_player_created, function(event)
     local status, err = pcall(evogui.new_player, event)
@@ -55,8 +51,10 @@ script.on_event(defines.events.on_player_created, function(event)
 end)
 
 script.on_event(defines.events.on_tick, function(event)
+    local status, err = pcall(RemoteSensor.initialize)
+    if err then evogui.log({"err_generic", "on_tick:remote_initialize", err}) end
     local status, err = pcall(evogui.update_gui, event)
-    if err then evogui.log({"err_generic", "on_tick", err}) end
+    if err then evogui.log({"err_generic", "on_tick:update_gui", err}) end
 end)
 
 script.on_event(defines.events.on_gui_click, function(event)
