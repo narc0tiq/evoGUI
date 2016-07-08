@@ -4,7 +4,7 @@ local sensor = ValueSensor.new("day_time")
 
 if remote.interfaces.MoWeather then
     -- assume MoWeather's getdaytime is sane
-    function get_day_time(player) return remote.call("MoWeather", "getdaytime") end
+    function get_day_time(player) return remote.call("MoWeather", "getdaytime", player.surface) end
 else
     -- 0.5 is midnight; let's make days *start* at midnight instead.
     function get_day_time(player) return player.surface.daytime + 0.5 end
