@@ -1,24 +1,16 @@
 if not evogui then evogui = { log = function() end } end
 
 
-local function get_player_by_name(player_name)
-    for _, p in pairs(game.players) do
-        if p.name == player_name then
-            return p
-        end
-    end
-    return nil
-end
-
-
+--
+-- Rebuilds a given player's EvoGUI, destroying any existing settings.
+-- player_name: the name or player index of the player being reset
 local function remote_rebuild(player_name)
     if not player_name then
         evogui.log({"err_needplayername"})
         return
     end
 
-    player = get_player_by_name(player_name)
-    if not player then
+    if not game.players[player_name] then
         evogui.log({"err_nosuchplayer", tostring(player_name)})
         return
     end
@@ -28,12 +20,13 @@ local function remote_rebuild(player_name)
         return
     end
 
-    global.evogui[player.name].version = ""
+    global.evogui[player_name] = nil
+    evogui.new_player({ player_index = player_name })
 end
 
 --
 -- Creates a sensor managed by a remote interface (another mod or script)
--- sensor_data: a table with the following fields,
+-- sensor_data: a table with the following fields:
 --     mod_name: Name of the mod registering the sensor. Sensor will be removed
 --         if the mod is removed from the game.
 --     name: Internal name of the sensor. Should be unique (otherwise you're
@@ -99,21 +92,77 @@ local function update_remote_sensor(sensor_name, sensor_text, sensor_color)
     end
 end
 
+--
+-- Checks if a remote sensor exists, returns true if one was does
+-- sensor_name: internal name of the sensor.
+-- example: remote.call("EvoGUI", "has_remote_sensor", "mymod_my_sensor_name")
+local function has_remote_sensor(sensor_name)
+    if not sensor_name then
+        evogui.log({"err_nosensorname"})
+        return
+    end
+    local sensor = RemoteSensor.get_by_name(sensor_name)
+    return sensor ~= nil
+end
+
+--
+-- Removes a sensor managed by a remote interface, returns true if one was removed
+-- sensor_name: internal name of the sensor. If it does not exist, it was already removed.
+-- example: remote.call("EvoGUI", "remove_remote_sensor", "mymod_my_sensor_name")
+local function remove_remote_sensor(sensor_name)
+    if not sensor_name then
+        evogui.log({"err_nosensorname"})
+        return
+    end
+    local sensor = RemoteSensor.get_by_name(sensor_name)
+    if not sensor then
+        -- impossible to know if the sensor was removed in advance, so just return a status
+        return false
+    end
+    evogui.hide_sensor(sensor)
+    for idx, sensor in pairs(evogui.value_sensors) do
+        if sensor.name == ("remote_sensor_" .. sensor_name) then
+            table.remove(evogui.value_sensors, idx)
+        end
+    end
+    global.remote_sensors[sensor_name] = nil
+    return true
+end
 
 interface = {
     rebuild = function(player_name)
-        local status, err = pcall(remote_rebuild, player_name)
-        if err then evogui.log({"err_generic", "interface.rebuild", err}) end
+        local status, retval = pcall(remote_rebuild, player_name)
+
+        if status then return retval
+        elseif retval then evogui.log({"err_generic", "remote.rebuild", retval}) end
     end,
 
     create_remote_sensor = function(sensor_data)
-        local status, err = pcall(create_remote_sensor, sensor_data)
-        if err then evogui.log({"err_generic", "remote.create_remote_sensor", err}) end
+        local status, retval = pcall(create_remote_sensor, sensor_data)
+
+        if status then return retval
+        elseif retval then evogui.log({"err_generic", "remote.create_remote_sensor", retval}) end
     end,
 
     update_remote_sensor = function(sensor_name, sensor_text, sensor_color)
-        local status, err = pcall(update_remote_sensor, sensor_name, sensor_text, sensor_color)
-        if err then evogui.log({"err_generic", "remote.update_remote_sensor", err}) end
+        local status, retval = pcall(update_remote_sensor, sensor_name, sensor_text, sensor_color)
+
+        if status then return retval
+        elseif retval then evogui.log({"err_generic", "remote.update_remote_sensor", retval}) end
+    end,
+
+    has_remote_sensor = function(sensor_name)
+        local status, retval = pcall(has_remote_sensor, sensor_name)
+
+        if status then return retval
+        elseif retval then evogui.log({"err_generic", "remote.has_remote_sensor", retval}) end
+    end,
+
+    remove_remote_sensor = function(sensor_name)
+        local status, retval = pcall(remove_remote_sensor, sensor_name)
+
+        if status then return retval
+        elseif retval then evogui.log({"err_generic", "remote.remove_remote_sensor", retval}) end
     end
 }
 
