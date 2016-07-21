@@ -126,7 +126,7 @@ function sensor:update_ui(owner)
         if sensor_settings.show_position or sensor_settings.show_surface then
             table.insert(desc, ' (')
             if sensor_settings.show_position then
-                table.insert(desc, string.format('@%d, %d', p.position.x, p.position.y))
+                table.insert(desc, string.format('@%d, %d', math.floor(p.position.x), math.floor(p.position.y)))
             end
             if sensor_settings.show_surface then
                 if sensor_settings.show_position then
