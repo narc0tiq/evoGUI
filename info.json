@@ -1,11 +1,11 @@
 {
   "name": "{{MOD_NAME}}",
   "version": "{{VERSION}}",
+  "factorio_version": "0.14"
   "title": "EvoGUI - Evolution Factor Indicator and more",
   "author": "Octav \"narc\" Sandulescu",
   "contact": "factorio-mods@narc.ro",
   "homepage": "https://github.com/narc0tiq/evoGUI/",
   "description": "Places some indicators on your UI for various little statistics that are nice to have.",
   "dependencies": ["base >= 0.13.0", "? moweather"],
-  "factorio_version": "0.13"
 }
