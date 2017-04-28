@@ -4,7 +4,7 @@ local sensor = ValueSensor.new("evolution_factor")
 sensor.extra_precision = sensor:make_on_click_checkbox_handler("extra_precision")
 
 function sensor:get_line(player)
-    local percent_evo_factor = game.evolution_factor * 100
+    local percent_evo_factor = player.force.evolution_factor * 100
     -- this nonsense is because string.format(%.4f) is not safe in MP across platforms, but integer math is
     local whole_number = math.floor(percent_evo_factor)
     local fractional_component = math.floor((percent_evo_factor - whole_number) * 10)
