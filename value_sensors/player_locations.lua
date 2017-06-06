@@ -67,6 +67,27 @@ local function directions(source, destination)
 end
 
 
+local function get_online_time(player)
+    local minutes = math.floor(player.online_time / 3600)
+    local hours = math.floor(minutes / 60)
+    local days = math.floor(hours / 24)
+
+    local result = {""}
+    if days > 0 then
+        if days == 1 then
+            table.insert(result, {"sensor.player_locations.single_day_fragment"})
+        else
+            table.insert(result, {"sensor.player_locations.multi_day_fragment", tostring(days)})
+        end
+        table.insert(result, ' ')
+    end
+
+    table.insert(result, string.format("%d:%02d", hours % 24, minutes % 60))
+
+    return result
+end
+
+
 function sensor:update_ui(owner)
     local player = game.players[owner.player_index]
     local sensor_settings = global.evogui[player.name].sensor_settings[self.name]
@@ -118,9 +139,11 @@ function sensor:update_ui(owner)
             table.insert(desc, player_name)
         end
 
-        if p.connected == false then
-            table.insert(desc, ' ')
-            table.insert(desc, {"sensor.player_locations.offline_fragment"})
+        table.insert(desc, ' ')
+        if p.connected then
+            table.insert(desc, {"sensor.player_locations.online_fragment", get_online_time(p)})
+        else
+            table.insert(desc, {"sensor.player_locations.offline_fragment", get_online_time(p)})
         end
 
         if sensor_settings.show_position or sensor_settings.show_surface then

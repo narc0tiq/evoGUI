@@ -3,29 +3,42 @@ require "template"
 local sensor = ValueSensor.new("play_time")
 sensor.show_days = sensor:make_on_click_checkbox_handler("show_days")
 sensor.show_seconds = sensor:make_on_click_checkbox_handler("show_seconds")
+sensor.show_personal_time = sensor:make_on_click_checkbox_handler("show_personal_time")
+
+
+local function format_play_time(ticks, settings)
+    local seconds = math.floor(ticks / 60)
+    local minutes = math.floor(seconds / 60)
+    local hours = math.floor(minutes / 60)
+    local days = math.floor(hours / 24)
+
+    local result = {""}
+    if days > 0 and settings.show_days then
+        if days == 1 then
+            table.insert(result, {"sensor.play_time.single_day_fragment"})
+        else
+            table.insert(result, {"sensor.play_time.multi_day_fragment", tostring(days)})
+        end
+        table.insert(result, ' ')
+        hours = hours % 24
+    end
+
+    if settings.show_seconds then
+        table.insert(result, string.format("%d:%02d:%02d", hours, minutes % 60, seconds % 60))
+    else
+        table.insert(result, string.format("%d:%02d", hours, minutes % 60))
+    end
+
+    return result
+end
 
 
 function sensor:get_line(player)
-    local play_time_seconds = math.floor(game.tick/60)
-    local play_time_minutes = math.floor(play_time_seconds/60)
-    local play_time_hours = math.floor(play_time_minutes/60)
-    local play_time_days = math.floor(play_time_hours/24)
+    local desc = {"", format_play_time(game.tick, self.settings)}
 
-    local desc = {""}
-    if play_time_days > 0 and self.settings.show_days then
-        if play_time_days == 1 then
-            table.insert(desc, {"sensor.play_time.single_day_fragment"})
-        else
-            table.insert(desc, {"sensor.play_time.multi_day_fragment", tostring(play_time_days)})
-        end
+    if self.settings.show_personal_time then
         table.insert(desc, ' ')
-        play_time_hours = play_time_hours % 24
-    end
-
-    if self.settings.show_seconds then
-        table.insert(desc, string.format("%d:%02d:%02d", play_time_hours, play_time_minutes % 60, play_time_seconds % 60))
-    else
-        table.insert(desc, string.format("%d:%02d", play_time_hours, play_time_minutes % 60))
+        table.insert(desc, {"sensor.play_time.personal_time_fragment", format_play_time(player.online_time, self.settings)})
     end
 
     return {self.format_key, desc}
@@ -48,6 +61,10 @@ function sensor:settings_gui(player_index)
     root.add{type="checkbox", name="evogui_sensor_play_time_checkbox_show_seconds",
              caption={"sensor.play_time.settings.show_seconds"},
              state=sensor_settings.show_seconds}
+
+    root.add{type="checkbox", name="evogui_sensor_play_time_checkbox_show_personal_time",
+             caption={"sensor.play_time.settings.show_personal_time"},
+             state=sensor_settings.show_personal_time or false}
 
     root.add{type="button", name="evogui_sensor_play_time_close", caption={"settings_close"}}
 end
