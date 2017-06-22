@@ -20,12 +20,32 @@ function evogui.mod_init()
     end
 end
 
+
+local function mod_update_0_4_205()
+    -- 0.4.204 to 0.4.205: Factorio 0.15.22 introduced a bug wherein a
+    -- GUI element with more than 4 characters in its name, which was
+    -- shorter than the_mod_name + 4 characters, would get deleted on
+    -- load. At this time, the EvoGUI root element switched from
+    -- gui.top.evoGUI to gui.top.evogui_root.
+    --
+    -- We need to clean up the leftovers for people updating EvoGUI
+    -- from any other version of Factorio now.
+    for _, player in pairs(game.players) do
+        if player.gui.top.evoGUI then
+            player.gui.top.evoGUI.destroy()
+        end
+    end
+end
+
+
 function evogui.mod_update(data)
     if data.mod_changes then
         if data.mod_changes["{{MOD_NAME}}"] then
             -- TODO: If a more major migration ever needs doing, do that here.
             -- Otherwise, just falling back to mod_init should work fine.
             evogui.mod_init()
+
+            mod_update_0_4_205()
         end
 
         evogui.validate_sensors(data.mod_changes)
@@ -72,7 +92,7 @@ function evogui.hide_sensor(sensor)
     for _, player in pairs(game.players) do
         local player_settings = global.evogui[player.name]
 
-        local sensor_flow = player.gui.top.evoGUI.sensor_flow
+        local sensor_flow = player.gui.top.evogui_root.sensor_flow
         evogui.update_av(player, sensor_flow.always_visible)
     end
 end
@@ -96,11 +116,11 @@ function evogui.update_gui(event)
         if not player_settings then
             evogui.new_player({player_index = player_index})
             player_settings = global.evogui[player.name]
-        elseif not player.gui.top.evoGUI then
+        elseif not player.gui.top.evogui_root then
             evogui.create_sensor_display(player)
         end
 
-        local sensor_flow = player.gui.top.evoGUI.sensor_flow
+        local sensor_flow = player.gui.top.evogui_root.sensor_flow
         evogui.update_av(player, sensor_flow.always_visible)
         if player_settings.popup_open then
             evogui.update_ip(player, sensor_flow.in_popup)
@@ -171,16 +191,16 @@ end
 
 
 function evogui.create_sensor_display(player)
-    local root = player.gui.top.evoGUI
+    local root = player.gui.top.evogui_root
     local destroyed = false
     if root then
-        player.gui.top.evoGUI.destroy()
+        player.gui.top.evogui_root.destroy()
         destroyed = true
     end
 
     if not root or destroyed then
         local root = player.gui.top.add{type="frame",
-                                        name="evoGUI",
+                                        name="evogui_root",
                                         direction="horizontal",
                                         style="outer_frame_style"}
 
@@ -249,7 +269,7 @@ function evogui.evoGUI_toggle_popup(event)
     local player = game.players[event.player_index]
     local player_settings = global.evogui[player.name]
 
-    local root = player.gui.top.evoGUI
+    local root = player.gui.top.evogui_root
 
     if player_settings.popup_open then
         -- close it
