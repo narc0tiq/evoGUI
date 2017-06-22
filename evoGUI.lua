@@ -96,6 +96,8 @@ function evogui.update_gui(event)
         if not player_settings then
             evogui.new_player({player_index = player_index})
             player_settings = global.evogui[player.name]
+        elseif not player.gui.top.evoGUI then
+            evogui.create_sensor_display(player)
         end
 
         local sensor_flow = player.gui.top.evoGUI.sensor_flow
