@@ -10,12 +10,13 @@ time.
 * Many, many improvements made by Afforess! Thanks so much, you're the best!
 * The wonderful translations contributed by these awesome people:
     JoCKeRiL (Hebrew), Rikkilook (Russian), theRustyKnife (Czech),
-    thomaskneisel and BenediktMagnus (German), diilmac (Polish).
+    thomaskneisel and BenediktMagnus (German), diilmac (Polish),
+    Xagros (Korean).
 
 
 ## License ##
 
-The source of **EvoGUI** is Copyright 2015 Octav "narc" Sandulescu. It
+The source of **EvoGUI** is Copyright 2015-2017 Octav "narc" Sandulescu. It
 is licensed under the [MIT license][mit], available in this package in the file
 [LICENSE.md](LICENSE.md).
 
