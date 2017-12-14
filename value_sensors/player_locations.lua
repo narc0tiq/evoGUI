@@ -14,10 +14,10 @@ function sensor:create_ui(owner)
         local root = owner.add{type="flow",
                                name=self.name,
                                direction="horizontal",
-                               style="description_flow_style"}
+                               style="EvoGUI_cramped_flow_h"}
 
         root.add{type="label", caption={self.format_key}}
-        root.add{type="table", name="player_list", colspan=1}
+        root.add{type="table", name="player_list", column_count=1}
     end
 end
 

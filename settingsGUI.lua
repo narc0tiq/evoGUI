@@ -110,11 +110,11 @@ function evogui.evoGUI_settings(event)
                                    name="core_settings",
                                    caption={"settings.core_settings.title"},
                                    direction="vertical",
-                                   style="naked_frame_style"}
+                                   style="naked_frame"}
 
     local update_freq_flow = core_settings.add{type="flow", name="update_freq_flow", direction="horizontal"}
     update_freq_flow.add{type="label", caption={"settings.core_settings.update_freq_left"}}
-    local textfield = update_freq_flow.add{type="textfield", name="textfield", style="number_textfield_style"}
+    local textfield = update_freq_flow.add{type="textfield", name="textfield", style="number_textfield"}
     textfield.text=tostring(global.settings.update_delay)
     update_freq_flow.add{type="label", caption={"settings.core_settings.update_freq_right"}}
 
@@ -122,9 +122,9 @@ function evogui.evoGUI_settings(event)
                                    name="sensors_frame",
                                    caption={"settings.sensors_frame.title"},
                                    direction="vertical",
-                                   style="naked_frame_style"}
+                                   style="naked_frame"}
 
-    local table = sensors_frame.add{type="table", name="table", colspan=4}
+    local table = sensors_frame.add{type="table", name="table", column_count=4}
 
     for _, sensor in ipairs(evogui.value_sensors) do
         add_sensor_table_row(table, sensor, player_data.always_visible, player_data.in_popup)

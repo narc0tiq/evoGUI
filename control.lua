@@ -57,7 +57,10 @@ script.on_event(defines.events.on_tick, function(event)
     if err then evogui.log({"err_generic", "on_tick:update_gui", err}) end
 end)
 
-script.on_event(defines.events.on_gui_click, function(event)
+local last_clicked = nil
+local last_checked = nil
+
+local function raise_on_click(event)
     local status, err = pcall(evogui.on_gui_click, event)
 
     if err then
@@ -67,4 +70,24 @@ script.on_event(defines.events.on_gui_click, function(event)
             evogui.log({"err_generic", "on_gui_click", err})
         end
     end
+end
+
+script.on_event(defines.events.on_gui_checked_state_changed, function(event)
+    -- prevent raising on_click twice for the same element
+    if last_clicked ~= nil and last_clicked == event.element.name then
+        return
+    end
+    last_checked = event.element.name
+
+    raise_on_click(event)
+end)
+
+script.on_event(defines.events.on_gui_click, function(event)
+    -- prevent raising on_click twice for the same element
+    if last_checked ~= nil and last_checked == event.element.name then
+        return
+    end
+    last_clicked = event.element.name
+
+    raise_on_click(event)
 end)

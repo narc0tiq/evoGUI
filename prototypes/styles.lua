@@ -23,7 +23,7 @@ end
 
 default_gui.EvoGUI_button_with_icon = {
     type = "button_style",
-    parent = "slot_button_style",
+    parent = "slot_button",
 
     scalable = true,
 
@@ -68,4 +68,16 @@ default_gui.EvoGUI_settings = {
     default_graphical_set = button_graphics( 0, 48),
     hovered_graphical_set = button_graphics(16, 48),
     clicked_graphical_set = button_graphics(32, 48),
+}
+
+default_gui.EvoGUI_cramped_flow_v = {
+    type = "vertical_flow_style",
+    vertical_spacing = 1,
+    horizontal_spacing = 1,
+}
+
+default_gui.EvoGUI_cramped_flow_h = {
+    type = "horizontal_flow_style",
+    vertical_spacing = 1,
+    horizontal_spacing = 1,
 }

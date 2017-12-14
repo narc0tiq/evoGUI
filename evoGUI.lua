@@ -202,12 +202,12 @@ function evogui.create_sensor_display(player)
         local root = player.gui.top.add{type="frame",
                                         name="evogui_root",
                                         direction="horizontal",
-                                        style="outer_frame_style"}
+                                        style="outer_frame"}
 
         local action_buttons = root.add{type="flow",
                                         name="action_buttons",
                                         direction="vertical",
-                                        style="description_flow_style"}
+                                        style="EvoGUI_cramped_flow_v"}
         action_buttons.add{type="button",
                            name="evoGUI_toggle_popup",
                            style="EvoGUI_expando_closed"}
@@ -221,15 +221,15 @@ function evogui.create_sensor_display(player)
         local sensor_flow = root.add{type="flow",
                                      name="sensor_flow",
                                      direction="vertical",
-                                     style="description_flow_style"}
+                                     style="EvoGUI_cramped_flow_v"}
         sensor_flow.add{type="flow",
                         name="always_visible",
                         direction="vertical",
-                        style="description_flow_style"}
+                        style="EvoGUI_cramped_flow_v"}
         sensor_flow.add{type="flow",
                         name="in_popup",
                         direction="vertical",
-                        style="description_flow_style"}
+                        style="EvoGUI_cramped_flow_v"}
     end
 end
 
