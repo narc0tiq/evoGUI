@@ -11,7 +11,7 @@ time.
 * The wonderful translations contributed by these awesome people:
     JoCKeRiL (Hebrew), Rikkilook (Russian), theRustyKnife (Czech),
     thomaskneisel and BenediktMagnus (German), diilmac (Polish),
-    Xagros (Korean).
+    Xagros (Korean), futuroattore86 (Italian).
 
 
 ## License ##
