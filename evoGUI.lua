@@ -202,7 +202,7 @@ function evogui.create_sensor_display(player)
         local root = player.gui.top.add{type="frame",
                                         name="evogui_root",
                                         direction="horizontal",
-                                        style="outer_frame"}
+                                        style="EvoGUI_outer_frame_no_border"}
 
         local action_buttons = root.add{type="flow",
                                         name="action_buttons",

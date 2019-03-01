@@ -12,11 +12,12 @@ time.
     JoCKeRiL (Hebrew), Rikkilook (Russian), theRustyKnife (Czech),
     thomaskneisel and BenediktMagnus (German), diilmac (Polish),
     Xagros (Korean), futuroattore86 (Italian).
+* Updating assistance by @kylewill0725!
 
 
 ## License ##
 
-The source of **EvoGUI** is Copyright 2015-2017 Octav "narc" Sandulescu. It
+The source of **EvoGUI** is Copyright 2015-2019 Octav "narc" Sandulescu. It
 is licensed under the [MIT license][mit], available in this package in the file
 [LICENSE.md](LICENSE.md).
 

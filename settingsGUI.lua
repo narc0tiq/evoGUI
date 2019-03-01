@@ -114,7 +114,7 @@ function evogui.evoGUI_settings(event)
 
     local update_freq_flow = core_settings.add{type="flow", name="update_freq_flow", direction="horizontal"}
     update_freq_flow.add{type="label", caption={"settings.core_settings.update_freq_left"}}
-    local textfield = update_freq_flow.add{type="textfield", name="textfield", style="number_textfield"}
+    local textfield = update_freq_flow.add{type="textfield", name="textfield", style="short_number_textfield"}
     textfield.text=tostring(global.settings.update_delay)
     update_freq_flow.add{type="label", caption={"settings.core_settings.update_freq_right"}}
 

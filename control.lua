@@ -73,10 +73,6 @@ local function raise_on_click(event)
 end
 
 script.on_event(defines.events.on_gui_checked_state_changed, function(event)
-    -- prevent raising on_click twice for the same element
-    if last_clicked ~= nil and last_clicked == event.element.name then
-        return
-    end
     last_checked = event.element.name
 
     raise_on_click(event)

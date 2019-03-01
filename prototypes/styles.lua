@@ -2,24 +2,20 @@ local default_gui = data.raw["gui-style"].default
 
 local function button_graphics(xpos, ypos)
     return {
-        type = "monolith",
-
-        top_monolith_border = 0,
-        right_monolith_border = 0,
-        bottom_monolith_border = 0,
-        left_monolith_border = 0,
-
-        monolith_image = {
-            filename = "__{{MOD_NAME}}__/graphics/gui.png",
-            priority = "extra-high-no-scale",
-            width = 16,
-            height = 16,
-            x = xpos,
-            y = ypos,
-        },
+        filename = "__{{MOD_NAME}}__/graphics/gui.png",
+        priority = "extra-high-no-scale",
+        width = 16,
+        height = 16,
+        x = xpos,
+        y = ypos
     }
 end
 
+default_gui.EvoGUI_outer_frame_no_border = {
+    type = "frame_style",
+    parent = "outer_frame",
+    graphical_set = {}
+}
 
 default_gui.EvoGUI_button_with_icon = {
     type = "button_style",
